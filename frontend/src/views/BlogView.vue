@@ -39,7 +39,7 @@
   
   <script>
 
-  import { getAPI } from '@/axios-api'
+  import { getAPI } from '@/axios'
 
   export default {
     name: 'Blog',

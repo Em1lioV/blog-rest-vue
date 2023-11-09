@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+
 module.exports = {
   content: ['./public/**/*.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
   presets: [],
@@ -159,6 +160,19 @@ module.exports = {
       fuchsia: colors.fuchsia,
       pink: colors.pink,
       rose: colors.rose,
+      'blumine': {
+        '50': '#f1f8fa',
+        '100': '#dcecf1',
+        '200': '#bcdae5',
+        '300': '#8ec0d2',
+        '400': '#599db7',
+        '500': '#3e829c',
+        '600': '#366a84',
+        '700': '#2e5266',
+        '800': '#2f4a5b',
+        '900': '#2b404e',
+        '950': '#182834',
+    },    
     }),
     columns: {
       auto: 'auto',
@@ -301,7 +315,7 @@ module.exports = {
       DEFAULT: '1',
     },
     fontFamily: {
-      sans: [
+      sans: ['Inter var',
         'ui-sans-serif',
         'system-ui',
         '-apple-system',
@@ -991,6 +1005,6 @@ module.exports = {
       50: '50',
     },
   },
-  plugins: [],
+  plugins: [require('@tailwindcss/forms'),],
 }
 

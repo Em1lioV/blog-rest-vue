@@ -1,29 +1,57 @@
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.exceptions import AuthenticationFailed
-from rest_framework_simplejwt.views import TokenObtainPairView
-from .serializers import CustomTokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView,TokenRefreshView
 from rest_framework import status,generics
+from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import logout 
+from rest_framework_simplejwt.exceptions import TokenError
+import os
+
+from .models import Post,Role
+from .serializers import PostSerializer ,UserSerializer,RoleSerializer,CookieTokenRefreshSerializer, UserShortSerializer
 
 
-from .models import Post,User
-from .serializers import PostSerializer ,UserSerializer,RoleSerializer
+class CookieTokenObtainPairView(TokenObtainPairView):
+  def finalize_response(self, request, response, *args, **kwargs):
+    if response.data.get('refresh'):
+        cookie_max_age = 3600 * 24 * 14 # 14 days
+        response.set_cookie('refresh_token', response.data['refresh'], max_age=cookie_max_age, httponly=True )
+        del response.data['refresh']
+    return super().finalize_response(request, response, *args, **kwargs)
 
+class CookieTokenRefreshView(TokenRefreshView):
+    def finalize_response(self, request, response, *args, **kwargs):
+        if response.data.get('refresh'):
+            cookie_max_age = 3600 * 24 * 14 # 14 days
+            response.set_cookie('refresh_token', response.data['refresh'], max_age=cookie_max_age, httponly=True )
+            del response.data['refresh']
+        return super().finalize_response(request, response, *args, **kwargs)
+    serializer_class = CookieTokenRefreshSerializer
 
-
-class CustomTokenObtainPairView(TokenObtainPairView):
-    serializer_class = CustomTokenObtainPairSerializer
-
-class CustomLogoutView(APIView):
-    permission_classes = [IsAuthenticated]
-
+class LogoutView(APIView):
     def post(self, request):
-        # Cierra la sesión del usuario autenticado
+        permission_classes = [IsAuthenticated]
+        
+        response = Response({'detail': 'Successfully logged out'})
+        response.delete_cookie('access_token')  # Example for clearing a token stored in a cookie
+        response.delete_cookie('refresh_token')  # Example for clearing a refresh token stored in a cookie
+
+        # Invalidate the token on the server side (blacklist the token)
+        refresh_token = request.COOKIES.get('refresh_token')  # Example: Get the refresh token from cookies
+        if refresh_token:
+            try:
+                RefreshToken(refresh_token).blacklist()
+            except TokenError:
+                pass  # Token might be invalid or expired, no need to worry
+
+        # Log the user out (optional)
         logout(request)
-        return Response({"detail": "Sesión cerrada con éxito."}, status=status.HTTP_200_OK)
+        # Implement your logout logic here if needed
+
+        return response
+
 
 class BlogListView(APIView):
     def get(self,request,*args,**kwargs):
@@ -64,7 +92,16 @@ class RegisterView(APIView):
         serializer.save()
         return Response(serializer.data)
 
+class RoleListView(generics.ListCreateAPIView):
+    serializer_class = RoleSerializer
 
+    def get_queryset(self):
+        queryset = Role.objects.all()
+        description = self.request.query_params.get('description')
+        if description:
+            queryset = queryset.filter(description__icontains=description)
+        return queryset
+    
 class AddRoleView(APIView):
     def post(self,request):
         serializer = RoleSerializer(data=request.data)
@@ -73,12 +110,18 @@ class AddRoleView(APIView):
         return Response(serializer.data)
     
 class UserView(APIView):
-    permission_classes = [IsAuthenticated]
-
     def get(self, request):
+        permission_classes = [IsAuthenticated]
         user = request.user
-
-        # Serializa el usuario y devuelve los datos
         serializer = UserSerializer(user)
+
         return Response(serializer.data)
     
+class UserShortView(APIView):
+    def get(self, request):
+        permission_classes = [IsAuthenticated]
+        user = request.user
+        serializer = UserShortSerializer(user)
+
+        return Response(serializer.data)
+

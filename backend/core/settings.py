@@ -2,6 +2,9 @@ from pathlib import Path
 from corsheaders.defaults import default_headers
 import os
 import environ
+
+from datetime import timedelta
+
 env = environ.Env()
 
 environ.Env.read_env()
@@ -49,14 +52,20 @@ CORS_ORIGIN_WHITELIST = (
 
     'http://localhost:8080',
     'http://127.0.0.1:8080',
+    'http://localhost:8081',
+    'http://127.0.0.1:8081',
+    'http://localhost:8082',
+    'http://127.0.0.1:8082',
 
     'http://localhost:3000',
     'http://127.0.0.1:3000',
 )
+CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOW_HEADERS = list(default_headers) + [
     'contenttype',
 ]
+
 
 
 ROOT_URLCONF = 'core.urls'
@@ -138,9 +147,16 @@ MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES':[
+    'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ]
+    )
 }
 
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
+    "UPDATE_LAST_LOGIN": False,
+}
 AUTH_USER_MODEL = 'blog.User' 
