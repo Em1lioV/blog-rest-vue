@@ -10,4 +10,13 @@ const getAPI = axios.create({
     withCredentials: true, // Habilita el envío y la recepción de cookies
 });
 
-export { getAPI }
+const getAPImultipart = axios.create({
+    baseURL: BASE_URL,
+    headers: {
+        'Content-Type': 'multipart/form-data',
+    }
+});
+
+
+
+export { getAPI , getAPImultipart}

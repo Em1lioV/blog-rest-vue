@@ -4,6 +4,8 @@
       <div v-if="userData">
         <p><strong>Nombre de usuario:</strong> {{ userData.name }}</p>
         <p><strong>Correo electrónico:</strong> {{ userData.email }}</p>
+        <p><strong>ocupacion:</strong> {{ userData.role_description }}</p>
+        <img  :src="'/api/' + userData.profile_image" alt="">
         <!-- Otros campos de usuario -->
       </div>
       <div v-else>
