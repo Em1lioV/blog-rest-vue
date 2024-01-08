@@ -47,7 +47,7 @@
 
             <p class="mt-10 text-center text-sm text-gray-500">
                 ¿No eres miembro?
-                <a href="#" class="font-semibold leading-6 text-blumine-400 hover:text-blumine-300">Crea una cuenta</a>
+                <router-link to="/register" class="font-semibold leading-6 text-blumine-400 hover:text-blumine-300">Crea una cuenta</router-link>
             </p>
         </div>
     </div>
@@ -76,10 +76,8 @@ const login = async () => {
     await store.dispatch('userLogin', data); // Llama a la acción del store
 
     // Redirige al usuario a la página de inicio
-    router.push({ name: 'perfil' });
+    router.push({ name: 'home' });
   } catch (err) {
-    // Maneja el error como desees
-    console.log('Error en la autenticación');
     incorrectAuth.value = true;
   }
 };

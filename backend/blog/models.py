@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import AbstractUser
 
+
 class Role(models.Model):
     description =models.CharField(max_length=255)
 
@@ -50,6 +51,8 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+    
+    
 
 
 

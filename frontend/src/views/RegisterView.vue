@@ -8,70 +8,83 @@
           <div class="col-span-full">
             <label for="photo" class="block text-sm font-medium leading-6 text-gray-900">imagen de perfil</label>
             <div class="mt-2 flex items-center gap-x-3">
-              <img v-if="fotoUrl" class="h-12 w-12 rounded-full" :src="fotoUrl" alt="" />
-              <UserCircleIcon v-else class="h-12 w-12 text-gray-300" aria-hidden="true" />
+              <img v-if="fotoUrl" class="w-[66px] aspect-square rounded-full" :src="fotoUrl" alt="" />
+              <UserCircleIcon v-else class="w-[66px] aspect-square text-gray-300" aria-hidden="true" />
               <input type="file" accept="image/*" ref="fileInput" style="display: none" @change="handleFileChange" />
-              <button type="button" @click="openFileInput" class="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">Cambiar</button>
+              <button type="button" @click="openFileInput"
+                class="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">Cambiar</button>
             </div>
           </div>
 
           <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-4">
             <div class="sm:col-span-2">
-              <label for="firstName" class="block text-sm font-medium leading-6 text-gray-900">Nombre <span class="text-red-600">*</span></label>
+              <label for="firstName" class="block text-sm font-medium leading-6 text-gray-900">Nombre <span
+                  class="text-red-600">*</span></label>
               <div class="mt-2">
                 <input v-model="user.firstName" type="text" name="firstName" id="firstName" autocomplete="given-name"
-                  class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blumine-400 sm:text-sm sm:leading-6" required pattern="[A-Za-z ]{1,32}"/>
+                  class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blumine-400 sm:text-sm sm:leading-6"
+                  required pattern="[A-Za-z ]{1,32}" />
               </div>
             </div>
 
             <div class="sm:col-span-2">
-              <label for="lastName" class="block text-sm font-medium leading-6 text-gray-900">Apellido <span class="text-red-600">*</span></label>
+              <label for="lastName" class="block text-sm font-medium leading-6 text-gray-900">Apellido <span
+                  class="text-red-600">*</span></label>
               <div class="mt-2">
                 <input v-model="user.lastName" type="text" name="lastName" id="lastName" autocomplete="family-name"
-                  class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blumine-400 sm:text-sm sm:leading-6" required pattern="[A-Za-z ]{1,32}"/>
+                  class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blumine-400 sm:text-sm sm:leading-6"
+                  required pattern="[A-Za-z ]{1,32}" />
               </div>
             </div>
 
             <div class="sm:col-span-4">
-              <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email <span class="text-red-600">*</span></label>
+              <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email <span
+                  class="text-red-600">*</span></label>
               <div class="mt-2">
-                <input v-model="user.email" id="email" name="email" type="email" autocomplete="email" inputmode="email" maxlength="254" autocapitalize="off" spellcheck="false" autocorrect="off"
+                <input v-model="user.email" id="email" name="email" type="email" autocomplete="email" inputmode="email"
+                  maxlength="254" autocapitalize="off" spellcheck="false" autocorrect="off"
                   title="Email: ejemplo@dominio.com"
-                  class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blumine-400 sm:text-sm sm:leading-6" required />
+                  class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blumine-400 sm:text-sm sm:leading-6"
+                  required />
               </div>
             </div>
             <div class="sm:col-span-4">
-              <label for="ocupacion" class="block text-sm font-medium leading-6 text-gray-900">Ocupacion <span class="text-red-600">*</span></label>
+              <label for="ocupacion" class="block text-sm font-medium leading-6 text-gray-900">Ocupacion <span
+                  class="text-red-600">*</span></label>
               <div class="mt-2">
                 <Combobox :load-options="loadRoles" v-model="role" :create-option="createRole" />
               </div>
             </div>
             <div class="sm:col-span-4">
-              <label for="ocupacion" class="block text-sm font-medium leading-6 text-gray-900">contraseña <span class="text-red-600">*</span></label>
+              <label for="ocupacion" class="block text-sm font-medium leading-6 text-gray-900">contraseña <span
+                  class="text-red-600">*</span></label>
               <div class="mt-2">
-                        <input v-model="user.password" 
-                        pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-  title="Debe contener al menos un numero, una mayuscula y una minuscula, y debe terner al menos 8 o mas caracteres"
-                        id="password" name="password" type="password" autocomplete="new-password" required class="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 
+                <input v-model="user.password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                  title="Debe contener al menos un numero, una mayuscula y una minuscula, y debe terner al menos 8 o mas caracteres"
+                  id="password" name="password" type="password" autocomplete="new-password" required class="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 
                     ring-inset ring-gray-300 placeholder:text-gray-400 
                     focus:ring-2 focus:ring-inset focus:ring-blumine-400 sm:text-sm sm:leading-6 outline-none">
               </div>
             </div>
             <div class="sm:col-span-4">
-              <label for="ocupacion" class="block text-sm font-medium leading-6 text-gray-900">confirmar contraseña <span class="text-red-600">*</span></label>
+              <label for="ocupacion" class="block text-sm font-medium leading-6 text-gray-900">confirmar contraseña <span
+                  class="text-red-600">*</span></label>
               <div class="mt-2">
-                        <input v-model="passwordConfirm" id="passwordConfirm" name="passwordConfirm" type="password" autocomplete="new-password" required class="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 
+                <input v-model="passwordConfirm" id="passwordConfirm" name="passwordConfirm" type="password"
+                  autocomplete="new-password" required class="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 
                     ring-inset ring-gray-300 placeholder:text-gray-400 
                     focus:ring-2 focus:ring-inset focus:ring-blumine-400 sm:text-sm sm:leading-6 outline-none">
               </div>
             </div>
-        </div>
+          </div>
         </div>
       </div>
 
       <div class="mt-6 flex items-center justify-end gap-x-6">
-        <button type="button" class="text-sm font-semibold leading-6 rounded-md px-2 py-1 text-gray-900" @click="resetForm">Volver</button>
-        <button type="submit" class="rounded-md bg-blumine-400 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blumine-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blumine-500">
+        <button type="button" class="text-sm font-semibold leading-6 rounded-md px-2 py-1 text-gray-900"
+          @click="volver">Volver</button>
+        <button type="submit"
+          class="rounded-md bg-blumine-400 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blumine-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blumine-500">
           Registrar
         </button>
       </div>
@@ -83,10 +96,11 @@
 import { PhotoIcon, UserCircleIcon } from '@heroicons/vue/24/solid'
 import { ref } from 'vue'
 import axios from "axios";
-
-import { getAPI } from '../axios';
+import { useRouter } from 'vue-router';
+import { getAPI } from '../axiosConfig';
 import Combobox from '@/components/Combobox.vue';
 
+const route = useRouter();
 const role = ref()
 const passwordConfirm = ref()
 const user = ref({
@@ -139,6 +153,10 @@ const openFileInput = () => {
   }
 };
 
+function volver(){
+  route.go(-1)
+}
+
 const handleFileChange = (event) => {
   const file = event.target.files[0];
   if (file) {
@@ -159,20 +177,20 @@ const submitForm = async (event) => {
   formData.append("email", user.value.email);
   formData.append("password", user.value.password);
   formData.append("role", role.value.value);
-  formData.append("profile_image",user.value.foto)
+  formData.append("profile_image", user.value.foto)
 
   // Convierte los datos a JSON y muestra en consola
   try {
     for (var pair of formData.entries()) {
-    console.log(pair[0]+ ', ' + pair[1]); 
-}
+      console.log(pair[0] + ', ' + pair[1]);
+    }
     // Realiza la solicitud POST utilizando la instancia de axios personalizada
 
-  const response = await axios.post("/api/register/", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
+    const response = await axios.post("/api/register/", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
 
     // Verifica si la respuesta es exitosa
     if (response.status === 200) {

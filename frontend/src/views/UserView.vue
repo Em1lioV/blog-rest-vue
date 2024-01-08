@@ -5,7 +5,10 @@
         <p><strong>Nombre de usuario:</strong> {{ userData.name }}</p>
         <p><strong>Correo electrónico:</strong> {{ userData.email }}</p>
         <p><strong>ocupacion:</strong> {{ userData.role_description }}</p>
-        <img  :src="'/api/' + userData.profile_image" alt="">
+        <div v-if="userData.profile_image">
+          <img  :src="'/api/' + userData.profile_image" alt="">
+        </div>
+        
         <!-- Otros campos de usuario -->
       </div>
       <div v-else>
@@ -17,14 +20,14 @@
   
   <script setup>
   import { ref, onMounted } from 'vue';
-  import { fetchData } from '@/util/fetchData.js';
+  import { fetchData } from '@/util/apiUtils.js';
   
   const userData = ref(null);
   
   onMounted(async () => {
     try {
       const url = 'user/';
-      const data = await fetchData(url);
+      const data = await fetchData(url, undefined,true);
       userData.value = data;
     } catch (error) {
       // Manejo de errores

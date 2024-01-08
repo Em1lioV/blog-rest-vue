@@ -1,7 +1,7 @@
 import { createStore } from 'vuex';
-import { getAPI } from './axios';
+import { getAPI } from './axiosConfig';
 import Cookies from 'js-cookie';
-
+import { isTokenValid } from './util/tokenUtils';
 export default createStore({
   state() {
     return {
@@ -25,6 +25,11 @@ export default createStore({
     },
 
   },
+  getters: {
+    validatedAccessToken(state) {
+      return isTokenValid(state.access_token) ? state.access_token : null;
+    },
+  },
   actions: {
     async userLogin({ commit }, userCredentials) {
       try {
@@ -44,16 +49,17 @@ export default createStore({
         throw error;
       }
     },
-    async refreshToken({ commit, state }) {
+    async refreshToken({ commit, dispatch }) {
       try {
         const response = await getAPI.post('/token/refresh/');
-
         const access = response.data.access;
+    
         commit('updateStorage', { access });
-
-        return access;
+        return true; // Return true indicating successful refresh
       } catch (error) {
-        throw error;
+        // Handle the error if the refresh request fails
+        console.error('Error refreshing token:', error);
+        return false; // Return false indicating failure to refresh
       }
     },
     async userLogout({ commit }) {

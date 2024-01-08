@@ -1,16 +1,21 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
+from rest_framework.generics import CreateAPIView 
 from rest_framework.response import Response
+from rest_framework.parsers import MultiPartParser
 from rest_framework_simplejwt.views import TokenObtainPairView,TokenRefreshView
 from rest_framework import status,generics
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import logout 
 from rest_framework_simplejwt.exceptions import TokenError
+from rest_framework import exceptions
+from rest_framework import filters
+
 import os
 
 from .models import Post,Role
-from .serializers import PostSerializer ,UserSerializer,RoleSerializer,CookieTokenRefreshSerializer, UserShortSerializer
+from .serializers import PostSerializer ,UserSerializer,RoleSerializer,CookieTokenRefreshSerializer, UserShortSerializer,PostListSerializer
 
 
 class CookieTokenObtainPairView(TokenObtainPairView):
@@ -59,7 +64,20 @@ class BlogListView(APIView):
         serializer = PostSerializer(posts,many=True)
 
         return Response(serializer.data)
+
+
     
+
+class PostListView(generics.ListAPIView):
+    serializer_class = PostListSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['title', 'excerpt']
+
+    def get_queryset(self):
+        # Filter only published posts
+        return Post.objects.filter(status='published')
+
+
 class PostDetailView(APIView):
     def get(self,request,post_slug,*args,**kwargs):
         post = get_object_or_404(Post, slug = post_slug)
@@ -68,12 +86,16 @@ class PostDetailView(APIView):
 
         return Response(serializer.data)
     
-class PostCreateView(generics.CreateAPIView):
+class PostCreateView(CreateAPIView):
     serializer_class = PostSerializer
+    permission_classes = [IsAuthenticated]
 
+    def perform_create(self, serializer):
+        # Asigna el autor al usuario autenticado y establece el valor del campo 'slug' antes de guardar
+        serializer.save(author=self.request.user)
+        
 class PostDeleteView(generics.DestroyAPIView):
-    serializer_class = PostSerializer
-
+    serializer_class = Post
     def get_object(self):
         pk = self.kwargs.get('pk')
         return Post.objects.get(pk=pk)
@@ -84,13 +106,36 @@ class PostUpdateView(generics.UpdateAPIView):
     def get_object(self):
         pk = self.kwargs.get('pk')
         return Post.objects.get(pk=pk)
+    
+
+
+
+
 
 class RegisterView(APIView):
-    def post(self,request):
-        serializer = UserSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
+    parser_classes = [MultiPartParser]
+
+    def post(self, request, *args, **kwargs):
+        try:
+            # Log information about the incoming request
+          
+
+            # Serialize and save user data
+            serializer = UserSerializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+
+            # Log information about the successful registration
+       
+
+            # Return a response with the serialized data
+            return Response(serializer.data)
+        except Exception as e:
+            # Log the exception for further debugging
+    
+
+            # Return a response with details about the error
+            return Response({"detail": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class RoleListView(generics.ListCreateAPIView):
     serializer_class = RoleSerializer

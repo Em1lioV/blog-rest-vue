@@ -6,8 +6,8 @@
 </template>
 
 <script setup>
-  import NavBar from './components/NavBar.vue';
-  import { useRoute } from 'vue-router'
+import NavBar from './components/NavBar.vue';
+import { useRoute } from 'vue-router'
 import { computed } from 'vue';
 
 const route = useRoute();
