@@ -1,11 +1,16 @@
 <template>
   <article class="flex max-w-2xl flex-col items-start justify-between border border-gray-200 rounded-lg shadow">
+  
     <div v-if="post.thumbnail" class="max-h-48 sm:max-h-60 lg:max-h-48 w-full object-cover rounded-t-md">
-      <img :src="post.thumbnail" alt="" loading="lazy" class="w-full h-full object-cover rounded-t-md" />
+      <router-link :to="'/post/'+ post.slug " >
+        <img :src="post.thumbnail" alt="" loading="lazy" class="w-full h-full object-cover rounded-t-md" />
+    </router-link>
     </div>
 
     <div v-else class="p-5 w-full">
-      <img src="../assets/logo.png" loading="lazy" alt="" class="max-h-48 m-auto object-fit rounded-t-md" />
+      <router-link :to="'/post/'+ post.slug " >
+        <img src="../assets/logo.png" loading="lazy" alt="" class="max-h-48 m-auto object-fit rounded-t-md" />
+      </router-link>
     </div>
 
     <div class="flex items-center gap-x-4 text-xs pt-3 px-3">
@@ -17,8 +22,10 @@
     </div>
 
     <div class="group relative p-3">
-      <h3 class="mt-3 text-lg text-start font-semibold leading-6 text-gray-900 group-hover:text-gray-600">{{ post.title }}</h3>
-      <p class="mt-5 line-clamp-3 text-sm leading-6 text-gray-600">{{ post.excerpt || post.content }}</p>
+      <router-link :to="'/post/'+ post.slug " >
+        <h3 class="mt-3 text-lg text-start font-semibold leading-6 text-gray-900 group-hover:text-gray-600">{{ post.title }}</h3>
+        <p class="mt-5 line-clamp-3 text-sm leading-6 text-gray-600">{{ post.excerpt || post.content }}</p>
+      </router-link>
     </div>
 
     <div class="text-start relative mt-8 flex items-center gap-x-4 pb-3 px-3">
