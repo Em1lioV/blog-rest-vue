@@ -20,7 +20,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        fields = ['title', 'excerpt', 'content', 'thumbnail','status']
+        fields = '__all__'
         read_only_fields = ['author']
     
     def create(self, validated_data):
@@ -44,6 +44,7 @@ class PostListSerializer(serializers.ModelSerializer):
             'author_role_description',
             'thumbnail',
             'author_profile_image',
+            'slug'
         ]
 
     def to_representation(self, instance):
