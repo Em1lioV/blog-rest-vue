@@ -1,7 +1,12 @@
 from django.shortcuts import get_object_or_404
+from django.db import models
 from rest_framework.views import APIView
 from rest_framework.generics import CreateAPIView 
 from rest_framework.response import Response
+from django.utils.html import strip_tags
+from django.db.models import Exists, OuterRef,  Value, Case, When, F
+from django.db.models.functions import Substr, Concat
+
 from rest_framework.parsers import MultiPartParser
 from rest_framework_simplejwt.views import TokenObtainPairView,TokenRefreshView
 from rest_framework import status,generics
@@ -15,7 +20,7 @@ from rest_framework import filters
 import os
 
 from .models import Post,Role
-from .serializers import PostSerializer ,UserSerializer,RoleSerializer,CookieTokenRefreshSerializer, UserShortSerializer,PostListSerializer
+from .serializers import PostSerializer ,CustomPostAuthorSerializer,UserSerializer,RoleSerializer,CookieTokenRefreshSerializer, UserShortSerializer,PostAuthorSerializer
 
 
 class CookieTokenObtainPairView(TokenObtainPairView):
@@ -68,16 +73,15 @@ class BlogListView(APIView):
 
     
 
+
 class PostListView(generics.ListAPIView):
-    serializer_class = PostListSerializer
+    serializer_class = CustomPostAuthorSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['title', 'excerpt']
 
     def get_queryset(self):
-        # Filter only published posts
-        return Post.objects.filter(status='published')
-
-
+        return Post.postobjects.select_related('author__role').filter(status='published')
+    
 class PostDetailView(APIView):
     def get(self,request,post_slug,*args,**kwargs):
         post = get_object_or_404(Post, slug = post_slug)

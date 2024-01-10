@@ -1,9 +1,11 @@
 from rest_framework import serializers
 from .models import Post, User,Role
 from django.utils.html import strip_tags
+from html import unescape
 from rest_framework_simplejwt.exceptions import InvalidToken
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer,TokenRefreshSerializer
 from django.utils.text import slugify
+import re
 
 class CookieTokenRefreshSerializer(TokenRefreshSerializer):
     refresh = None
@@ -28,7 +30,8 @@ class PostSerializer(serializers.ModelSerializer):
         validated_data['slug'] = slugify(validated_data['title'])
         return super().create(validated_data)
 
-class PostListSerializer(serializers.ModelSerializer):
+class PostAuthorSerializer(serializers.ModelSerializer):
+    author_id = serializers.IntegerField(source='author.id', read_only=True)
     author_name = serializers.CharField(source='author.name', read_only=True)
     author_profile_image = serializers.CharField(source='author.profile_image', read_only=True)
     author_role_description = serializers.CharField(source='author.role.description', read_only=True)
@@ -40,18 +43,41 @@ class PostListSerializer(serializers.ModelSerializer):
             'excerpt',
             'content',
             'published',
-            'author_name',
-            'author_role_description',
             'thumbnail',
+            'slug',
+            'author_id',
+            'author_name',
             'author_profile_image',
-            'slug'
-        ]
+            'author_role_description',
+        ] 
+
+class CustomPostAuthorSerializer(PostAuthorSerializer):
+    class Meta:
+        model = Post
+        fields = ['id', 'title', 'published', 'thumbnail', 'slug', 'excerpt','content','author_id',
+            'author_name',
+            'author_profile_image',
+            'author_role_description']
+    
+    def get_content(self, obj):
+        # Deshacerse de entidades HTML
+        cleaned_content = unescape(obj.content)
+        
+        # Agregar espacios entre los contenidos para evitar que se junten
+        cleaned_content = re.sub(r'(?<=>)([^<]*)(?=<)', r'\1 ', cleaned_content)
+
+        # Eliminar etiquetas HTML, limitar a 200 caracteres y ajustar espacios
+        cleaned_content = strip_tags(cleaned_content)[:200]
+        cleaned_content = re.sub(r'\s+', ' ', cleaned_content)
+
+        return cleaned_content
 
     def to_representation(self, instance):
-        ret = super().to_representation(instance)
-        # Elimina las etiquetas HTML del campo 'content' antes de la serialización
-        ret['content'] = strip_tags(instance.content)
-        return ret
+        representation = super().to_representation(instance)
+        # Sobrescribir el valor de content en la representación
+        representation['content'] = self.get_content(instance)
+        return representation
+
 
 class UserSerializer(serializers.ModelSerializer):
      role_description = serializers.ReadOnlyField(source='role.description')
