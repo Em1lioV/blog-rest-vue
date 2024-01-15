@@ -32,33 +32,34 @@ class CookieTokenObtainPairView(TokenObtainPairView):
     return super().finalize_response(request, response, *args, **kwargs)
 
 class CookieTokenRefreshView(TokenRefreshView):
-    def finalize_response(self, request, response, *args, **kwargs):
-        if response.data.get('refresh'):
-            cookie_max_age = 3600 * 24 * 14 # 14 days
-            response.set_cookie('refresh_token', response.data['refresh'], max_age=cookie_max_age, httponly=True )
-            del response.data['refresh']
-        return super().finalize_response(request, response, *args, **kwargs)
     serializer_class = CookieTokenRefreshSerializer
 
-class LogoutView(APIView):
-    def post(self, request):
-        permission_classes = [IsAuthenticated]
-        
-        response = Response({'detail': 'Successfully logged out'})
-        response.delete_cookie('access_token')  # Example for clearing a token stored in a cookie
-        response.delete_cookie('refresh_token')  # Example for clearing a refresh token stored in a cookie
+    def post(self, request, *args, **kwargs):
+        response = super().post(request, *args, **kwargs)
 
-        # Invalidate the token on the server side (blacklist the token)
-        refresh_token = request.COOKIES.get('refresh_token')  # Example: Get the refresh token from cookies
+        # Verifica si la clave 'refresh' está presente en los datos de la respuesta
+        if response.data.get('refresh'):
+            cookie_max_age = 3600 * 24 * 14  # 14 days
+            # Establece la cookie 'refresh_token'
+            response.set_cookie('refresh_token', response.data['refresh'], max_age=cookie_max_age, httponly=True)
+            # Elimina la clave 'refresh' de los datos de la respuesta
+            del response.data['refresh']
+
+        return response
+
+class LogoutView(APIView):
+    def post(self, request):   
+        response = Response({'detail': 'Successfully logged out'})
+
+        refresh_token = request.COOKIES.get('refresh_token')
         if refresh_token:
             try:
                 RefreshToken(refresh_token).blacklist()
             except TokenError:
-                pass  # Token might be invalid or expired, no need to worry
+                pass 
 
-        # Log the user out (optional)
-        logout(request)
-        # Implement your logout logic here if needed
+        response.delete_cookie('access_token')  
+        response.delete_cookie('refresh_token') 
 
         return response
 
