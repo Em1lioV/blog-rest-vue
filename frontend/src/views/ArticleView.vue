@@ -8,7 +8,7 @@
 
 <script setup>
 import { ref, onMounted, watch } from 'vue';
-import { fetchData } from '@/util/apiUtils';
+import { getAPI } from '@/axiosConfig';
 import Post from '@/components/Post.vue';
 import { useRoute } from 'vue-router';
 
@@ -25,8 +25,8 @@ watch(postSlug, async () => {
     if (postSlug.value) {
         try {
             const url = `post/${postSlug.value}`;
-            const data = await fetchData(url);
-            post.value = data;
+            const response = await getAPI.get(url);
+            post.value = response.data;
         } catch (error) {
             console.error('Error al obtener los detalles del post:', error);
         }

@@ -39,15 +39,15 @@
                 </router-link>
               </div>
               <!-- Imagen de perfil o ícono predeterminado -->
-              <img v-if="userProfileImageUrl" @click="toggleUserDropdown"
-                class="cursor-pointer h-12 w-12 rounded-full m-2" :src="'api' + userProfileImageUrl" alt="" />
+              <img v-if="user && user.profile_image" @click="toggleUserDropdown"
+                class="cursor-pointer h-12 w-12 rounded-full m-2" :src="'api' + user.profile_image" alt="" />
               <div v-else>
                 <UserCircleIcon class="cursor-pointer h-12 w-12 rounded-full m-2 text-gray-300"
                   @click="toggleUserDropdown" />
               </div>
               <!-- Nombre de usuario -->
               <p class="hidden sm:block xl:text-xl md:text-lg sm:text-md cursor-pointer" @click="toggleUserDropdown">
-                {{ userName }}
+                {{ user.name }}
               </p>
             </div>
             <!-- Menú desplegable del usuario -->
@@ -112,61 +112,60 @@
   </header>
 </template>
 
+
 <script setup>
-import { onMounted, watch, ref, computed } from 'vue';
-import { fetchData } from '@/util/apiUtils';
-import store from '@/store'; // Ajusta la ruta según sea necesario
-import { UserCircleIcon, UserIcon, PlusIcon, PlusSmallIcon,MagnifyingGlassIcon } from '@heroicons/vue/24/solid';
-import SearchBar from '@/components/input_components/SearchBar.vue';
+import { ref, watch } from 'vue';
+import { getAPI } from '@/axiosConfig';
+import store from '@/store';
+import SearchBar from './input_components/SearchBar.vue';
+import { UserCircleIcon, UserIcon, PlusSmallIcon, MagnifyingGlassIcon } from '@heroicons/vue/24/solid';
 
 
 const userDropdownOpen = ref(false);
-const userProfileImageUrl = ref('');
-
-const userName = ref('');
-
-
-const isAuthenticated = computed(() => {
-  return store.getters.validatedAccessToken !== null;
-});
-
+const user = ref({ name: '', profile_image: '' });
+const isAuthenticated = ref(false);
 
 const toggleUserDropdown = () => {
   userDropdownOpen.value = !userDropdownOpen.value;
 };
 
 const checkAuthentication = () => {
-  if (isAuthenticated.value) {
+  if (store.state.access_token) {
     fetchUserData();
+    isAuthenticated.value = true;
   }
 };
 
 const fetchUserData = async () => {
   try {
     const url = '/user/navbar/';
-    const data = await fetchData(url,undefined,true);
-    userProfileImageUrl.value = data.profile_image;
-    userName.value = data.name;
+
+    const response = await getAPI(url, { requiresAuth: true });
+    user.value = response.data;
   } catch (error) {
     console.error('Error al obtener datos del usuario:', error);
+
   }
 };
 
-const logout = () => {
-  store.dispatch('userLogout');
-  userProfileImageUrl.value = '';
-};
+const logout = ()=>{
+  store.dispatch('userLogout')
+}
 
-onMounted(() => {
-  checkAuthentication();
-});
+checkAuthentication();
 
-watch(isAuthenticated, (newVal) => {
-  if (!newVal) {
-    userProfileImageUrl.value = '';
-    toggleUserDropdown();
+watch(
+  () => store.state.access_token,
+  (newAccessToken) => {
+    isAuthenticated.value = !!newAccessToken;
+
+    if (!isAuthenticated.value) {
+      user.value = {
+        name: '',
+        profile_image: '',
+      };
+      toggleUserDropdown();
+    }
   }
-});
-
-
+);
 </script>

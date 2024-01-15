@@ -1,77 +1,73 @@
-import { createStore } from 'vuex';
-import { getAPI } from './axiosConfig';
-import Cookies from 'js-cookie';
-import { isTokenValid } from './util/tokenUtils';
+import { createStore } from "vuex";
+import { getAPI } from "@/axiosConfig";
+import Cookies from "js-cookie";
+import router from "./router";
+
 export default createStore({
   state() {
     return {
-      access_token: Cookies.get('access_token') || null
-    }
+      access_token: Cookies.get("access_token") || null,
+    };
   },
   mutations: {
     updateStorage(state, { access }) {
       state.access_token = access;
 
-      Cookies.set('access_token', access, {
+      Cookies.set("access_token", access, {
         secure: true,
         expires: 1,
       });
-
     },
     clearStorage(state) {
       state.access_token = null;
-
-      Cookies.remove('access_token');
     },
-
   },
   getters: {
-    validatedAccessToken(state) {
-      return isTokenValid(state.access_token) ? state.access_token : null;
-    },
+    accessToken: (state) => state.access_token,
   },
   actions: {
-    async userLogin({ commit }, userCredentials) {
+    async refreshToken({ commit, dispatch }) {
       try {
-        const response = await getAPI.post('/token/', {
+        const newAccessToken = await getAPI.post("/token/refresh/");
+        const access = newAccessToken.data.access;
+        commit("updateStorage", { access });
+        return access;
+      } catch (error) {
+        console.error("Error al refrescar el token:", error.response?.data || error.message);
+   
+        await dispatch("userLogout");
+      
+    
+        throw error;
+      }
+    },
+
+    async userLogin({ commit, dispatch }, userCredentials) {
+      try {
+        const response = await getAPI.post("/token/", {
           email: userCredentials.email,
           password: userCredentials.password,
         });
 
         const access = response.data.access;
-     
-
-        commit('updateStorage', { access });
+        commit("updateStorage", { access });
 
         return access;
       } catch (error) {
-        commit('clearStorage');
+        commit("clearStorage");
         throw error;
       }
     },
-    async refreshToken({ commit, dispatch }) {
+    async userLogout({ commit, state }) {
       try {
-        const response = await getAPI.post('/token/refresh/');
-        const access = response.data.access;
-    
-        commit('updateStorage', { access });
-        return true; // Return true indicating successful refresh
-      } catch (error) {
-        // Handle the error if the refresh request fails
-        console.error('Error refreshing token:', error);
-        return false; // Return false indicating failure to refresh
-      }
-    },
-    async userLogout({ commit }) {
-      try {
-        const response = await getAPI.post('/logout/');
-        if (response){
-          commit('clearStorage');
-
+        if (state.access_token) {
+          await getAPI.post("/logout/");
+          commit("clearStorage");
+          router.push("/login");
         }
-        return response;
       } catch (error) {
-        throw error
+        console.error("Error al cerrar sesión:", error.response?.data || error.message);
+        throw error;
       }
     },
   },

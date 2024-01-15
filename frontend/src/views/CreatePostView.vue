@@ -95,7 +95,7 @@ import { ref } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 import Editor from '@tinymce/tinymce-vue';
-import { postData } from '../util/apiUtils';
+import { getAPImultipart } from '@/axiosConfig';
 
 const apiKey = process.env.VUE_APP_TINYMCEAPIKEY;
 
@@ -189,8 +189,8 @@ const submitPost = async (status) => {
     }
 
     formData.append('status', status); // Add the status field
-
-    const response = await postData("post/create/", formData, true);
+    const url = 'post/create/'
+    const response = await getAPImultipart.post(url,formData,{requiresAuth:true}) 
 
     if (response.status === 201) {
       console.log("Publicación exitosa:", response.data);

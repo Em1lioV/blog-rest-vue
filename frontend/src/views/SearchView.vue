@@ -32,7 +32,7 @@
   
   <script setup>
   import { ref, onMounted, watch, onActivated } from "vue";
-  import { fetchData } from '@/util/apiUtils';
+  import { getAPI } from '@/axiosConfig';
   import { UserCircleIcon } from '@heroicons/vue/24/solid'
   import { useRoute } from 'vue-router';
   import SearchBar from "@/components/input_components/SearchBar.vue";
@@ -50,10 +50,10 @@
       // Only perform the search if there is a valid query
       if (searchQuery.value.trim() !== '') {
         const url = `posts/?search=${searchQuery.value}`;
-        const data = await fetchData(url);
+        const response = await getAPI.get(url);
   
         // Update the state of posts with the search results
-        posts.value = data;
+        posts.value = response.data;
       } else {
         // If there's no valid query, reset the posts to null or an empty array
         posts.value = null;

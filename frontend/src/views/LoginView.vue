@@ -73,11 +73,13 @@ const login = async () => {
   };
 
   try {
-    await store.dispatch('userLogin', data); // Llama a la acción del store
+    console.log('data '+  data.email +' '+ data.password);
+    await store.dispatch('userLogin',data); // Llama a la acción del store
 
     // Redirige al usuario a la página de inicio
     router.push({ name: 'home' });
   } catch (err) {
+    console.log(err);
     incorrectAuth.value = true;
   }
 };

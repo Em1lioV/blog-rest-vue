@@ -1,5 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import store from '@/store';
+import store, { emitter } from '@/store';
 
 const routes = [
   {
@@ -58,19 +58,20 @@ const router = createRouter({
   routes
 })
 
-router.beforeEach((to, from, next) => {
-  const isAuthenticated = store.state.access_token;
-  console.log(isAuthenticated)
+const redirectToLogin = (to, from, next) => {
+  next('/login');
+};
 
-  // Verifica si la ruta requiere autenticación
-  if (to.meta.requiresAuth && !isAuthenticated) {
-    // Redirige a la página de inicio de sesión si no está autenticado
-    next('/login');
-  } else {
-    // Continúa con la navegación
-    next();
+router.beforeEach(async (to, from, next) => {
+  if (!to.meta.requiresAuth) {
+    return next();
   }
+  const accessToken = store.getters.accessToken;
+
+  if (!accessToken) {
+    return redirectToLogin(to, from, next);
+  }
+  next();
 });
 
-
-export default router
+export default router;

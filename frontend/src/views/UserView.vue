@@ -20,19 +20,19 @@
   
   <script setup>
   import { ref, onMounted } from 'vue';
-  import { fetchData } from '@/util/apiUtils.js';
+  import { getAPI } from '@/axiosConfig';
   
   const userData = ref(null);
   
   onMounted(async () => {
     try {
       const url = 'user/';
-      const data = await fetchData(url, undefined,true);
-      userData.value = data;
+      const response = await getAPI.get(url, {requiresAuth:true});
+      userData.value = response.data;
     } catch (error) {
       // Manejo de errores
       console.error('Error al obtener datos del usuario:', error);
     }
   });
-  </script>
+</script>
   

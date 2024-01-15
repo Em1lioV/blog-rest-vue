@@ -2,7 +2,9 @@
     <div class="mx-auto pt-10 lg:mx-0 max-w-none">
         <article class="p-5">
         <h1 class="text-3xl md:text-4xl font-bold mb-2">{{ capitalizeFirstLetter(post.title) }}</h1>
-        <h2 class="text-lg md:text-xl font-semibold mb-4 text-gray-500">{{ capitalizeFirstLetter(post.excerpt) }}</h2>
+        <div v-if="post.excerpt !== null && ''">
+          <h2 class="text-lg md:text-xl font-semibold mb-4 text-gray-500">{{ capitalizeFirstLetter(post.excerpt) }}</h2>
+        </div> 
         <div v-if="post.thumbnail" class="mb-4">
           <img :src="'api/'+post.thumbnail" alt="Post Thumbnail" class="w-full h-auto rounded-md">
         </div>
@@ -31,11 +33,11 @@
   </template>
   
   <script setup>
-  import { ref, defineProps } from 'vue';
+  import { ref } from 'vue';
   
   const props = defineProps(['post']);
   const capitalizeFirstLetter = (str) => {
-  return str.charAt(0).toUpperCase() + str.slice(1);
+    return str.charAt(0).toUpperCase() + str.slice(1);
 };
   </script>
   

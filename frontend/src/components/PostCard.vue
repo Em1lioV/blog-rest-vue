@@ -24,7 +24,7 @@
     <div class="group relative p-3">
       <router-link :to="'/post/'+ post.slug " >
         <h3 class="mt-3 text-lg text-start font-semibold leading-6 text-gray-900 group-hover:text-gray-600">{{ post.title }}</h3>
-        <p class="mt-5 line-clamp-3 text-sm leading-6 text-gray-600">{{ post.excerpt || post.content }}</p>
+        <p class="mt-5 line-clamp-3 text-sm leading-6 text-gray-600"><span v-show="post.excerpt">{{ post.excerpt }} - </span>{{ post.content }}</p>
       </router-link>
     </div>
 
