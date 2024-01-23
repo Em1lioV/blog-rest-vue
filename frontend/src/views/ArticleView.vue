@@ -8,7 +8,7 @@
 
 <script setup>
 import { ref, onMounted, watch } from 'vue';
-import { getAPI } from '@/axiosConfig';
+import { getAPI } from '@/services/axiosConfig';
 import Post from '@/components/Post.vue';
 import { useRoute } from 'vue-router';
 

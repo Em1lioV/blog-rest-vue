@@ -55,7 +55,6 @@ const configureAxios = (baseURL, headers) => {
             console.error("Error durante la renovación del token:", error);
           } finally {
             isRefreshing = false;
-            newAccessToken = null
             refreshSubscribers = [];
             refreshTokenPromise = null;
           }

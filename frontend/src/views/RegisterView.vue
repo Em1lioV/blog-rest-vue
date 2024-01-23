@@ -97,7 +97,7 @@ import { PhotoIcon, UserCircleIcon } from '@heroicons/vue/24/solid'
 import { ref } from 'vue'
 import axios from "axios";
 import { useRouter } from 'vue-router';
-import { getAPI } from '../axiosConfig';
+import { getAPI } from '../services/axiosConfig';
 import Combobox from '@/components/Combobox.vue';
 
 const route = useRouter();

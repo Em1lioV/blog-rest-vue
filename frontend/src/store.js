@@ -1,5 +1,5 @@
 import { createStore } from "vuex";
-import { getAPI } from "@/axiosConfig";
+import { getAPI } from "@/services/axiosConfig";
 import Cookies from "js-cookie";
 import router from "./router";
 

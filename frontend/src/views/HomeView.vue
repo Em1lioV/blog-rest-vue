@@ -13,7 +13,7 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { getAPI } from "@/axiosConfig";
+import { getAPI } from "@/services/axiosConfig";
 import { PhotoIcon, UserCircleIcon } from '@heroicons/vue/24/solid'
 import PostList from "@/components/PostList.vue";
 

@@ -92,10 +92,9 @@
 
 <script setup>
 import { ref } from 'vue';
-import axios from 'axios';
 import { useRouter } from 'vue-router';
 import Editor from '@tinymce/tinymce-vue';
-import { getAPImultipart } from '@/axiosConfig';
+import { getAPImultipart } from '@/services/axiosConfig';
 
 const apiKey = process.env.VUE_APP_TINYMCEAPIKEY;
 

@@ -12,6 +12,7 @@
     "@tinymce/tinymce-vue": "^4.0.7",
     "autoprefixer": "^10",
     "axios": "^1.5.1",
+    "class-variance-authority": "^0.7.0",
     "core-js": "^3.8.3",
     "js-cookie": "^3.0.5",
     "jwt-decode": "^4.0.0",

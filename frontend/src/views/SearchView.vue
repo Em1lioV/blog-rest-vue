@@ -32,7 +32,7 @@
   
   <script setup>
   import { ref, onMounted, watch, onActivated } from "vue";
-  import { getAPI } from '@/axiosConfig';
+  import { getAPI } from '@/services/axiosConfig';
   import { UserCircleIcon } from '@heroicons/vue/24/solid'
   import { useRoute } from 'vue-router';
   import SearchBar from "@/components/input_components/SearchBar.vue";

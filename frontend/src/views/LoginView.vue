@@ -73,7 +73,6 @@ const login = async () => {
   };
 
   try {
-    console.log('data '+  data.email +' '+ data.password);
     await store.dispatch('userLogin',data); // Llama a la acción del store
 
     // Redirige al usuario a la página de inicio

@@ -39,15 +39,12 @@
                 </router-link>
               </div>
               <!-- Imagen de perfil o ícono predeterminado -->
-              <img v-if="user && user.profile_image" @click="toggleUserDropdown"
-                class="cursor-pointer h-12 w-12 rounded-full m-2" :src="'api' + user.profile_image" alt="" />
-              <div v-else>
-                <UserCircleIcon class="cursor-pointer h-12 w-12 rounded-full m-2 text-gray-300"
-                  @click="toggleUserDropdown" />
-              </div>
+              <span v-if="user" @click="toggleUserDropdown" class="cursor-pointer mr-2 flex items-center">
+                <Avatar :src="user.profile_image"  :name="user.name"/>
+              </span>
               <!-- Nombre de usuario -->
               <p class="hidden sm:block xl:text-xl md:text-lg sm:text-md cursor-pointer" @click="toggleUserDropdown">
-                {{ user.name }}
+                {{ user.name }} 
               </p>
             </div>
             <!-- Menú desplegable del usuario -->
@@ -85,7 +82,7 @@
             </div>
             <!-- Ícono de usuario para dispositivos móviles -->
             <div class="md:hidden" @click="toggleUserDropdown">
-              <UserIcon class="h-10 w-10 m-2" />
+              <UserCircleIcon class="h-10 w-10 m-2" />
             </div>
             <!-- Menú desplegable del usuario para dispositivos móviles -->
             <transition enter-active-class="transition ease-out duration-100"
@@ -115,10 +112,11 @@
 
 <script setup>
 import { ref, watch } from 'vue';
-import { getAPI } from '@/axiosConfig';
+import { getAPI } from '@/services/axiosConfig';
 import store from '@/store';
 import SearchBar from './input_components/SearchBar.vue';
-import { UserCircleIcon, UserIcon, PlusSmallIcon, MagnifyingGlassIcon } from '@heroicons/vue/24/solid';
+import { UserCircleIcon, PlusSmallIcon, MagnifyingGlassIcon } from '@heroicons/vue/24/solid';
+import Avatar from './Avatar.vue';
 
 
 const userDropdownOpen = ref(false);
@@ -141,7 +139,11 @@ const fetchUserData = async () => {
     const url = '/user/navbar/';
 
     const response = await getAPI(url, { requiresAuth: true });
-    user.value = response.data;
+    user.value.name = response.data.name
+    if (response.data.profile_image) {
+      user.value.profile_image = 'api'+ response.data.profile_image 
+    }
+
   } catch (error) {
     console.error('Error al obtener datos del usuario:', error);
 

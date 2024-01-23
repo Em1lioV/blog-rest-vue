@@ -29,9 +29,9 @@
     </div>
 
     <div class="text-start relative mt-8 flex items-center gap-x-4 pb-3 px-3">
-      <img v-if="post.author_profile_image" :src="'api/media/' + post.author_profile_image" alt=""
-        class="h-10 w-10 rounded-full bg-gray-50" loading="lazy" />
-      <UserCircleIcon v-else class="h-10 w-10 rounded-full bg-gray-50 text-gray-300" aria-hidden="true" />
+      
+      <Avatar :src="author_profile_image" :name="post.author_name"/>
+     
       <div class="text-sm leading-6">
         <p class="font-semibold text-gray-900">{{ post.author_name }}</p>
         <p class="text-gray-600">{{ post.author_role_description }}</p>
@@ -42,8 +42,16 @@
 
 <script setup>
 import { UserCircleIcon } from '@heroicons/vue/24/solid'
+import { computed } from 'vue';
+import Avatar from './Avatar.vue';
 
 const props = defineProps(['post']);
+
+
+
+const author_profile_image = computed(() => {
+  return props.post.author_profile_image?  'api/media/'+ props.post.author_profile_image : props.post.author_profile_image;
+});
 </script>
 
 

@@ -20,7 +20,7 @@
   
   <script setup>
   import { ref, onMounted } from 'vue';
-  import { getAPI } from '@/axiosConfig';
+  import { getAPI } from '@/services/axiosConfig';
   
   const userData = ref(null);
   
