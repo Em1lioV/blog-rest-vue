@@ -33,11 +33,10 @@
   </template>
   
   <script setup>
-  import { ref } from 'vue';
   
   const props = defineProps(['post']);
   const capitalizeFirstLetter = (str) => {
     return str.charAt(0).toUpperCase() + str.slice(1);
 };
-  </script>
+</script>
   

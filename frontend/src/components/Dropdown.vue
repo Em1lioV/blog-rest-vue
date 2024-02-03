@@ -31,7 +31,7 @@
 
 
 <script setup>
-import { ref, defineProps, onMounted, onUnmounted } from 'vue';
+import { ref, defineProps } from 'vue';
 import useClickOutside from '../util/useClickOutside';
 
 const { options } = defineProps(['options']);

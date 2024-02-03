@@ -72,8 +72,6 @@ class BlogListView(APIView):
         return Response(serializer.data)
 
 
-    
-
 
 class PostListView(generics.ListAPIView):
     serializer_class = CustomPostAuthorSerializer
@@ -164,7 +162,6 @@ class UserView(APIView):
         permission_classes = [IsAuthenticated]
         user = request.user
         serializer = UserSerializer(user)
-
         return Response(serializer.data)
     
 class UserShortView(APIView):
@@ -172,6 +169,7 @@ class UserShortView(APIView):
         permission_classes = [IsAuthenticated]
         user = request.user
         serializer = UserShortSerializer(user)
-
         return Response(serializer.data)
+
+
 
