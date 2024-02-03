@@ -40,9 +40,15 @@ const routes = [
     component: () => import( '../views/RegisterView.vue')
   },
   {
-    path: '/perfil', 
-    name: 'perfil',
+    path: '/profile', 
+    name: 'profile',
     component: () => import( '../views/UserView.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/me/stories', 
+    name: 'stories',
+    component: () => import( '../views/UserStoriesView.vue'),
     meta: { requiresAuth: true }
   }, 
   {
