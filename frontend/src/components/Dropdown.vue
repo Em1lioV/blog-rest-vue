@@ -16,11 +16,11 @@
         
           <hr v-if="option.separator" class="my-1 border-t border-gray-300" :key="`hr-${index}`">
           
-          <RouterLink v-if="option.to" :to="option.to" :class="[defaultClass, option.className]"
+          <RouterLink v-if="option.to" :to="option.to" :class="[ option.className,defaultClass]"
             @click="handleOptionClick(option)" :key="`router-link-${index}`">
             {{ option.label }}
           </RouterLink>
-          <span v-if="option.onClick" :class="[defaultClass, option.className]" @click="handleOptionClick(option)" :key="`span-${index}`">
+          <span v-if="option.onClick" :class="[ option.className,defaultClass]" @click="handleOptionClick(option)" :key="`span-${index}`">
             {{ option.label }}
           </span>
         </template>

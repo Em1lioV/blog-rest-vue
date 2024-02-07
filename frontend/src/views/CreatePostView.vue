@@ -6,60 +6,31 @@
           <h2 class="text-base font-semibold leading-7 text-gray-900">Nuevo Post</h2>
 
           <div class="sm:col-span-full mt-2">
-
             <Field id="coverImage" label="Imagen de Portada">
-              <div class="w-full  border-blumine-400 rounded-md border-[1px] relative bg-cover-container aspect-[16/6] shadow-black">
-                <img v-if="coverImageUrl" class="w-full h-full object-cover" :src="coverImageUrl" alt="" />
-                <div v-else class="w-full h-full justify-center flex items-center aspect-[16/6]">
-                  <img src="../assets/logo.png" alt="" class="bg-cover w-[25%] min-w-[100px] " />
-                </div>
-
-                <div class="absolute inset-0 flex flex-col items-end justify-end p-4">
-                  <div class="mt-auto">
-
-                    <input type="file" accept="image/*" ref="coverImageInput" style="display: none"
-                      @change="handleCoverImageChange" />
-                    <button type="button" @click="openCoverImageInput"
-                      class="rounded-md bg-white mr-1 px-2.5 py-1.5 text-xs sm:text-sm font-semibold text-gray-900  ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                      Cambiar
-                    </button>
-                    <button type="button" @click="removeCoverImage"
-                      class="rounded-md bg-white px-2.5 py-1.5 text-xs sm:text-sm font-semibold text-red-600 ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                      Eliminar
-                    </button>
-                  </div>
-                </div>
-              </div>
+              <CoverImageInput v-model="post.thumbnail" />
             </Field>
-
           </div>
-
-
-
           <div class="sm:col-span-full mt-2">
-
             <Field id="title" label="Titulo" required>
               <Input v-model="post.title" type="text" autocomplete="off" title="Ingrese un título válido" />
             </Field>
-
           </div>
-
           <div class="sm:col-span-full mt-2">
             <Field id="excerpt" label="Resumen">
               <Input v-model="post.excerpt" type="text" autocomplete="off" />
             </Field>
           </div>
-
           <div class="sm:col-span-full w-full mt-2">
             <Field id="content" label="Contenido" required>
-              <div class="mt-2 min-w-full ">
-                <TinyEditor v-model="post.content" />
-              </div>
+                <div v-if="showEditorSkeleton">
+                  <TinyEditorSkeleton/>
+                </div>
+                <div  v-show="!showEditorSkeleton">
+                  <TinyEditor  v-model="post.content" @editor-loaded="handleEditorLoaded"/>
+                </div>
+              
             </Field>
-
-
           </div>
-
         </div>
       </div>
 
@@ -88,8 +59,8 @@ import { getAPImultipart } from '@/services/axiosConfig';
 import Field from '@/components/input_components/Field.vue';
 import Input from '@/components/input_components/Input.vue';
 import TinyEditor from '@/components/input_components/TinyEditor.vue';
-
-
+import CoverImageInput from '@/components/input_components/CoverImageInput.vue';
+import TinyEditorSkeleton from '@/components/TinyEditorSkeleton.vue';
 
 
 
@@ -99,34 +70,16 @@ const post = ref({
   title: '',
   excerpt: '',
   content: '',
-  slug: '',
   thumbnail: null,
 });
 
-const coverImageUrl = ref(null);
-const coverImageInput = ref(null);
+const showEditorSkeleton = ref(true);
 
-const openCoverImageInput = () => {
-  if (coverImageInput.value) {
-    coverImageInput.value.click();
-  }
+const handleEditorLoaded = () => {
+  showEditorSkeleton.value = false;  
 };
 
-const handleCoverImageChange = (event) => {
-  const file = event.target.files[0];
-  if (file) {
-    coverImageUrl.value = URL.createObjectURL(file);
-    post.value.thumbnail = file;
-  }
-};
 
-const removeCoverImage = () => {
-  if (coverImageInput.value && coverImageUrl.value) {
-    coverImageUrl.value = null;
-    post.value.thumbnail = null;
-    coverImageInput.value.value = null;
-  }
-};
 
 const volver = () => {
   route.go(-1);
@@ -143,9 +96,10 @@ const submitPublished = async (event) => {
   if (event) {
     event.preventDefault();
   }
-  await submitPost('published');
-};
+   await submitPost('published'); 
 
+ 
+};
 
 
 const submitPost = async (status) => {

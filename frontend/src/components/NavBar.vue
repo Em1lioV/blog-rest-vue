@@ -114,7 +114,7 @@ const fetchUserData = async () => {
 };
 
 const dropdownOptions = [
-  { label: 'Escribir', to: '/crear-post', className: 'md:hidden px-4 py-2 text-xl text-white bg-blumine-400' },
+  { label: 'Escribir', to: '/crear-post', className: 'md:hidden px-4 py-2 text-xl text-white bg-blumine-400 hover:!bg-blumine-500' },
   { label: 'Tu Perfil', to: '/profile' },
   { label: 'Mis Publicaciones', to: '/me/stories' },
   { separator: true },
