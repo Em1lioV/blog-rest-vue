@@ -18,63 +18,35 @@
 
           <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-4">
             <div class="sm:col-span-2">
-              <label for="firstName" class="block text-sm font-medium leading-6 text-gray-900">Nombre <span
-                  class="text-red-600">*</span></label>
-              <div class="mt-2">
-                <input v-model="user.firstName" type="text" name="firstName" id="firstName" autocomplete="given-name"
-                  class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blumine-400 sm:text-sm sm:leading-6"
-                  required pattern="[A-Za-z ]{1,32}" />
-              </div>
+              <Field id="firstName" required label="Nombre">
+                <Input v-model="user.firstName" autocomplete="given-name" />
+              </Field>
             </div>
 
             <div class="sm:col-span-2">
-              <label for="lastName" class="block text-sm font-medium leading-6 text-gray-900">Apellido <span
-                  class="text-red-600">*</span></label>
-              <div class="mt-2">
-                <input v-model="user.lastName" type="text" name="lastName" id="lastName" autocomplete="family-name"
-                  class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blumine-400 sm:text-sm sm:leading-6"
-                  required pattern="[A-Za-z ]{1,32}" />
-              </div>
+              <Field id="lastName" required label="Apellido">
+                <Input v-model="user.lastName" autocomplete="family-name" />
+              </Field>
             </div>
 
             <div class="sm:col-span-4">
-              <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email <span
-                  class="text-red-600">*</span></label>
-              <div class="mt-2">
-                <input v-model="user.email" id="email" name="email" type="email" autocomplete="email" inputmode="email"
-                  maxlength="254" autocapitalize="off" spellcheck="false" autocorrect="off"
-                  title="Email: ejemplo@dominio.com"
-                  class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blumine-400 sm:text-sm sm:leading-6"
-                  required />
-              </div>
+              <Field id="email" label="Correo electrónico" required>
+                <Input v-model="user.email" type="email" autocomplete="email" />
+              </Field>
+
             </div>
             <div class="sm:col-span-4">
-              <label for="ocupacion" class="block text-sm font-medium leading-6 text-gray-900">Ocupacion <span
-                  class="text-red-600">*</span></label>
-              <div class="mt-2">
+              <Field id="ocupacion" label="Ocupacion">
                 <Combobox :load-options="loadRoles" v-model="role" :create-option="createRole" />
-              </div>
+              </Field>
+
+
             </div>
+
             <div class="sm:col-span-4">
-              <label for="ocupacion" class="block text-sm font-medium leading-6 text-gray-900">contraseña <span
-                  class="text-red-600">*</span></label>
-              <div class="mt-2">
-                <input v-model="user.password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-                  title="Debe contener al menos un numero, una mayuscula y una minuscula, y debe terner al menos 8 o mas caracteres"
-                  id="password" name="password" type="password" autocomplete="new-password" required class="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 
-                    ring-inset ring-gray-300 placeholder:text-gray-400 
-                    focus:ring-2 focus:ring-inset focus:ring-blumine-400 sm:text-sm sm:leading-6 outline-none">
-              </div>
-            </div>
-            <div class="sm:col-span-4">
-              <label for="ocupacion" class="block text-sm font-medium leading-6 text-gray-900">confirmar contraseña <span
-                  class="text-red-600">*</span></label>
-              <div class="mt-2">
-                <input v-model="passwordConfirm" id="passwordConfirm" name="passwordConfirm" type="password"
-                  autocomplete="new-password" required class="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 
-                    ring-inset ring-gray-300 placeholder:text-gray-400 
-                    focus:ring-2 focus:ring-inset focus:ring-blumine-400 sm:text-sm sm:leading-6 outline-none">
-              </div>
+              <Field id="password" label="Contraseña" required>
+                <Input v-model="password" type="password" autocomplete="new-password"/>
+              </Field>
             </div>
           </div>
         </div>
@@ -99,6 +71,7 @@ import axios from "axios";
 import { useRouter } from 'vue-router';
 import { getAPI } from '../services/axiosConfig';
 import Combobox from '@/components/Combobox.vue';
+import { Field, Input } from '@/components/input_components';
 
 const route = useRouter();
 const role = ref()
@@ -153,7 +126,7 @@ const openFileInput = () => {
   }
 };
 
-function volver(){
+function volver() {
   route.go(-1)
 }
 
