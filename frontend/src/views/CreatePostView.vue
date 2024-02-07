@@ -56,10 +56,8 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { getAPImultipart } from '@/services/axiosConfig';
-import Field from '@/components/input_components/Field.vue';
-import Input from '@/components/input_components/Input.vue';
-import TinyEditor from '@/components/input_components/TinyEditor.vue';
-import CoverImageInput from '@/components/input_components/CoverImageInput.vue';
+import { Field,Input,TinyEditor,CoverImageInput } from '@/components/input_components';
+
 import TinyEditorSkeleton from '@/components/TinyEditorSkeleton.vue';
 
 
