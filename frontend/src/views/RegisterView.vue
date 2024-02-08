@@ -45,7 +45,7 @@
 
             <div class="sm:col-span-4">
               <Field id="password" label="Contraseña" required>
-                <Input v-model="password" type="password" autocomplete="new-password"/>
+                <PasswordInput v-model="user.password" autocomplete="new-password" />
               </Field>
             </div>
           </div>
@@ -72,10 +72,10 @@ import { useRouter } from 'vue-router';
 import { getAPI } from '../services/axiosConfig';
 import Combobox from '@/components/Combobox.vue';
 import { Field, Input } from '@/components/input_components';
+import PasswordInput from '@/components/input_components/PasswordInput.vue';
 
 const route = useRouter();
 const role = ref()
-const passwordConfirm = ref()
 const user = ref({
   firstName: '',
   lastName: '',
@@ -130,6 +130,8 @@ function volver() {
   route.go(-1)
 }
 
+
+
 const handleFileChange = (event) => {
   const file = event.target.files[0];
   if (file) {
@@ -140,10 +142,6 @@ const handleFileChange = (event) => {
 
 const submitForm = async (event) => {
   event.preventDefault();
-  if (user.value.password !== passwordConfirm.value) {
-    alert("Las contraseñas no coinciden");
-    return;
-  }
   // Accede a los valores del formulario utilizando las variables de datos
   const formData = new FormData();
   formData.append("name", user.value.firstName + ' ' + user.value.lastName);

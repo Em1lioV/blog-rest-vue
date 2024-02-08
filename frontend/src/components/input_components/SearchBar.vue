@@ -3,7 +3,7 @@
     <div class="relative mt-1">
       <input
         type="text"
-        id="password"
+        id="Search"
         v-model="searchQuery"
         @keyup.enter="handleSearch"
         class="w-full pl-3 pr-10 py-2 border-2 border-gray-200 rounded hover:border-blumine-400 focus:outline-none focus:ring-inset focus:ring-blumine-400 focus:border-blumine-400 transition-colors"
