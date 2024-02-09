@@ -10,14 +10,11 @@
             <div class="mt-auto">
                 <input :id="field.id" type="file" accept="image/*" ref="fileInput" class="hidden" @change="handleFileChange"
                     :required="field.required" />
-                <button type="button" @click="openFileInput" aria-label="Seleccionar imagen" :class="[' rounded-md bg-white mr-1 px-2.5 py-1.5 text-xs sm:text-sm font-semibold text-gray-900 ring-1 ring-inset hover:bg-gray-50',
-                    field.invalid ? 'ring-red-500' : 'ring-gray-300', props.buttonClass]">
-                    {{ props.buttonText }}
-                </button>
-                <button type="button" @click="removeFile"
-                    class="rounded-md bg-white px-2.5 py-1.5 text-xs sm:text-sm font-semibold text-red-600 ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                    Eliminar
-                </button>
+               
+                <Button intent="secondary" ring size="sm" @click="openFileInput" aria-label="Seleccionar imagen">{{ props.buttonText }}</Button>
+                <Button intent="danger" ring size="sm" @click="removeFile" aria-label="eliminar imagen">Eliminar</Button>
+                
+              
             </div>
         </div>
     </div>
@@ -27,6 +24,7 @@
 import { inject } from 'vue';
 
 import useFileInput from '@/composables/useFileInput';
+import Button from './Button.vue';
 const emit = defineEmits(["update:modelValue"]);
 
 const emitUpdateModelValue = (file) => {

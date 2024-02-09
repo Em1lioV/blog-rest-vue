@@ -5,18 +5,12 @@
         <div class="border-b border-gray-900/10 pb-12">
           <h2 class="text-base font-semibold leading-7 text-gray-900">Registrarse</h2>
 
-          <div class="col-span-full">
-            <label for="photo" class="block text-sm font-medium leading-6 text-gray-900">imagen de perfil</label>
-            <div class="mt-2 flex items-center gap-x-3">
-              <img v-if="fotoUrl" class="w-[66px] aspect-square rounded-full" :src="fotoUrl" alt="" />
-              <UserCircleIcon v-else class="w-[66px] aspect-square text-gray-300" aria-hidden="true" />
-              <input type="file" accept="image/*" ref="fileInput" style="display: none" @change="handleFileChange" />
-              <button type="button" @click="openFileInput"
-                class="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">Cambiar</button>
-            </div>
-          </div>
-
           <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-4">
+            <div class="sm:col-span-4">
+              <Field id="photo" label="Imagen de perfil">
+                <ProfileImageInput v-model="user.profile_image" :name="user.firstName" :initials="initials" />
+              </Field>
+            </div>
             <div class="sm:col-span-2">
               <Field id="firstName" required label="Nombre">
                 <Input v-model="user.firstName" autocomplete="given-name" />
@@ -52,13 +46,10 @@
         </div>
       </div>
 
-      <div class="mt-6 flex items-center justify-end gap-x-6">
-        <button type="button" class="text-sm font-semibold leading-6 rounded-md px-2 py-1 text-gray-900"
-          @click="volver">Volver</button>
-        <button type="submit"
-          class="rounded-md bg-blumine-400 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blumine-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blumine-500">
-          Registrar
-        </button>
+      <div class="mt-6 flex items-center justify-end gap-x-3 ">
+          <Button intent="ghost" @click="volver" >Volver</Button>
+          <Button type="submit" class="!mr-0">Registrar</Button>
+        
       </div>
     </form>
   </div>
@@ -66,22 +57,23 @@
 
 <script setup>
 import { PhotoIcon, UserCircleIcon } from '@heroicons/vue/24/solid'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import axios from "axios";
 import { useRouter } from 'vue-router';
 import { getAPI } from '../services/axiosConfig';
 import Combobox from '@/components/Combobox.vue';
-import { Field, Input } from '@/components/input_components';
-import PasswordInput from '@/components/input_components/PasswordInput.vue';
+import { Field, Input, PasswordInput,Button } from '@/components/input_components';
+import ProfileImageInput from '@/components/input_components/ProfileImageInput.vue';
 
 const route = useRouter();
 const role = ref()
 const user = ref({
   firstName: '',
   lastName: '',
+  initials: '',
   email: '',
   password: '',
-  foto: null
+  profile_image: null
 });
 
 function loadRoles(query, setOptions) {
@@ -179,6 +171,12 @@ const submitForm = async (event) => {
   }
   // También puedes enviar los datos al servidor para procesamiento aquí
 }
+
+const initials = computed(() =>
+  user.value.firstName && user.value.lastName
+    ? user.value.firstName.charAt(0) + user.value.lastName.charAt(0)
+    : '' 
+);
 </script>
 
 

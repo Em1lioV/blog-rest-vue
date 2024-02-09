@@ -40,7 +40,7 @@
     <div class="w-[35%]  h-full">
 
       <router-link v-if="post.thumbnail" :to="'/post/' + post.slug" class="w-full h-full object-cover ">
-        <img :src="post.thumbnail" alt="" loading="lazy" class=" w-full h-full object-cover object-left-top" />
+        <img :src="post.thumbnail" alt="" loading="lazy" class=" w-full h-full object-cover" />
       </router-link>
 
       <router-link v-else :to="'/post/' + post.slug" class="p-5 grid place-items-center h-full">

@@ -35,6 +35,7 @@ import { defineProps, computed, provide } from 'vue';
 import ErrorMessage from './ErrorMessage.vue';
 import HelperMessage from './HelperMessage.vue';
 import Label from './Label.vue';
+import Button from './Button.vue';
 import { v4 as uuid } from 'uuid';
 
 const props = defineProps({

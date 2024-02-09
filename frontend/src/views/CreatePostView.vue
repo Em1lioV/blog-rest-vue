@@ -34,19 +34,14 @@
         </div>
       </div>
 
-      <div class="mt-6 flex items-center justify-end gap-x-6">
-        <button type="button" class="text-md font-semibold leading-6 rounded-md px-2 py-1 text-gray-900"
-          @click="volver">Volver</button>
-
-        <button type="submit" @click="submitDraft"
-          class="border-2 border-blumine-400 text-blumine-400 text-md font-semibold  px-4 py-2 rounded-md shadow-sm hover:bg-blumine-400 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blumine-500">
-          Guardar
-        </button>
-
-        <button type="submit" @click="submitPublished"
-          class="rounded-md bg-blumine-400 px-4 py-2 text-md font-semibold text-white shadow-sm hover:bg-blumine-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blumine-500">
+      <div class="mt-6 flex items-center justify-end gap-x-2">
+        <Button @click="volver" intent="ghost">Volver</Button>
+        <Button type="submit" @click="submitDraft" ring>
+          Guardar como borrador
+        </Button>
+        <Button type="submit" @click="submitPublished">
           Publicar
-        </button>
+        </Button>
       </div>
     </form>
   </div>
@@ -56,7 +51,7 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { getAPImultipart } from '@/services/axiosConfig';
-import { Field,Input,TinyEditor,CoverImageInput } from '@/components/input_components';
+import { Field,Input,TinyEditor,CoverImageInput,Button } from '@/components/input_components';
 
 import TinyEditorSkeleton from '@/components/TinyEditorSkeleton.vue';
 

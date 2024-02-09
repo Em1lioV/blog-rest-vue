@@ -1,5 +1,5 @@
 <template>
-    <div class="relative group/password">
+    <div class="relative ">
       <Input
         v-bind="$attrs"
         :id="id"

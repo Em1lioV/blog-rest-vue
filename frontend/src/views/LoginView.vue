@@ -20,33 +20,31 @@
 
                 </div>
                 <div>
-                    <Field id="password" label="Contraseña" required=""
-                        :leftLabelSlot="{ text: '¿Olvidaste tu contraseña?', href: '/forgot-password', class: 'font-semibold text-blumine-400 hover:text-blumine-300 hidden sm:inline-block' }">
-
-                        <Input v-model="password" type="password" autocomplete="current-password" />
+                    <Field id="password" label="Contraseña" required :leftLabelSlot="leftLabelSlot">
+                        <PasswordInput v-model="password" autocomplete="current-password" />
                     </Field>
 
                 </div>
 
                 <div>
-                    <button type="submit"
-                        class="flex w-full justify-center rounded-md bg-blumine-400 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-blumine-500  focus-visible:outline-blumine-400">Iniciar
-                        sesión</button>
+                    <Button type="submit" block>
+                        Iniciar sesión
+                    </Button>
+                    
                 </div>
             </form>
 
-            <div class="w-full block sm:hidden">
-                <router-link to="/forgot-password"
-                    class="inline-flex items-center justify-center text-center w-full mt-2 border-2 border-blumine-400 text-blumine-400 font-bold px-3 py-1.5 rounded text-sm">
+            <div class="w-full block sm:hidden mt-2">
+                <Button to="/forgot-password" intent="secondary" block ring>
                     ¿Olvidaste tu contraseña?
-                </router-link>
+                </Button>
+              
             </div>
 
             <p class="mt-8 text-center text-sm text-gray-500">
                 ¿No eres miembro?
-                <router-link to="/register" class="font-semibold leading-6 text-blumine-400 hover:text-blumine-300">
-                    Crea una cuenta
-                </router-link>
+                <Button to="/register" intent="link">Crea una cuenta</Button>
+
             </p>
         </div>
     </div>
@@ -54,7 +52,7 @@
 
 
 <script setup>
-import { Field,Input } from '@/components/input_components';
+import { Field, Input, PasswordInput,Button } from '@/components/input_components';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
@@ -64,7 +62,7 @@ const password = ref('');
 const incorrectAuth = ref(false);
 
 const router = useRouter();
-const store = useStore(); 
+const store = useStore();
 
 const login = async () => {
     const data = {
@@ -73,11 +71,17 @@ const login = async () => {
     };
 
     try {
-        await store.dispatch('userLogin', data); 
+        await store.dispatch('userLogin', data);
         router.push({ name: 'home' });
     } catch (err) {
         console.log(err);
         incorrectAuth.value = true;
     }
 };
+
+const leftLabelSlot = {
+    text: '¿Olvidaste tu contraseña?',
+    href: '/forgot-password',
+    class: 'font-semibold text-blumine-400 hover:text-blumine-300 hidden sm:inline-block'
+}
 </script>

@@ -1,28 +1,27 @@
 <template>
-  <div>
-    <div class="relative mt-1">
-      <input
-        type="text"
-        id="Search"
-        v-model="searchQuery"
-        @keyup.enter="handleSearch"
-        class="w-full pl-3 pr-10 py-2 border-2 border-gray-200 rounded hover:border-blumine-400 focus:outline-none focus:ring-inset focus:ring-blumine-400 focus:border-blumine-400 transition-colors"
-        placeholder="Search..."
-      />
-      <button
-        @click="handleSearch"
-        class="block w-7 h-7 text-center text-xl leading-0 absolute top-2 right-2 text-gray-400 focus:outline-none hover:text-blumine-400 transition-colors"
-      >
-        <MagnifyingGlassIcon class="w-6 h-6" />
-      </button>
-    </div>
+  <div class="relative">
+    <Input v-bind="$attrs" :id="props.id" v-model="searchQuery" :required="required" :invalid="invalid" @keyup.enter="handleSearch"
+      :ariaDescribeBy="ariaDescribeBy" :class="'pr-[40px] peer'" placeholder="buscar"  />
+    <button type="button" @click="handleSearch"
+      class="absolute inset-y-0 right-0 px-2 py-1.5 flex items-center focus:outline-none text-gray-300 peer-focus/:text-blumine-400">
+      <MagnifyingGlassIcon class="w-6 h-6 fill-current hover:text-blumine-500" />
+    </button>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
+import Input from './Input.vue';
+
 import { MagnifyingGlassIcon } from '@heroicons/vue/24/solid';
+
+const props = defineProps({
+  id: String,
+  required: Boolean,
+  invalid: Boolean,
+  ariaDescribeBy: String,
+});
 
 const router = useRouter();
 const route = useRoute();
@@ -47,9 +46,10 @@ onMounted(() => {
 watch(route, () => {
   if (isSearchPage()) {
     searchQuery.value = route.query.q || '';
-  } else { searchQuery.value = ''}
+  } else { searchQuery.value = '' }
 }, { deep: true });
 
 // Función para verificar si estamos en la página de búsqueda
 const isSearchPage = () => route.name === 'search';
 </script>
+

@@ -1,5 +1,5 @@
 <script setup>
-import { computed, watchEffect,ref } from "vue";
+import { computed, watchEffect, ref } from "vue";
 import { cva } from "class-variance-authority";
 
 const props = defineProps({
@@ -8,7 +8,7 @@ const props = defineProps({
   initials: String,
   size: {
     type: String,
-    validator: (value) => ["sm", "base", "lg"].includes(value),
+    validator: (value) => ["sm", "base", "md", "lg"].includes(value),
     default: "base",
   },
   shape: {
@@ -23,20 +23,25 @@ const verifiedSrc = ref(null);
 
 
 watchEffect(() => {
+  if (props.src && props.src !== '') {
     const img = new Image();
 
-img.src = props.src;
-  img.decode()
-    .then(() => {
-      verifiedSrc.value = props.src;
-    })
-    .catch((e) => {
-      verifiedSrc.value = null;
-    });
+    img.src = props.src;
+    img.decode()
+      .then(() => {
+        verifiedSrc.value = props.src;
+      })
+      .catch((e) => {
+        verifiedSrc.value = null;
+      });
+  } else {
+    // Si no se proporciona una imagen, establecer verifiedSrc como null
+    verifiedSrc.value = null;
+  }
 });
 
 const fallback = computed(() => {
-  return props.initials || props.name?.charAt(0).toUpperCase() || "?";
+  return props.initials?.toUpperCase() || props.name?.charAt(0).toUpperCase() || "?";
 });
 
 const ContainerClass = computed(() => {
@@ -47,15 +52,16 @@ const ContainerClass = computed(() => {
         size: {
           sm: "text-xs  h-8 w-8",
           base: "text-xl  h-12 w-12",
+          md: "text-2xl  h-16 w-16",
           lg: "text-5xl  h-28 w-28",
         },
-        shape:{
-            circle:"rounded-full",
-            square:"rounded",
+        shape: {
+          circle: "rounded-full",
+          square: "rounded",
         },
       },
     }
-  )({size:props.size,shape:props.shape})
+  )({ size: props.size, shape: props.shape })
 });
 
 const innerBorderClass = computed(() => {
@@ -63,24 +69,19 @@ const innerBorderClass = computed(() => {
     "absolute inset-0 border border-black/5",
     {
       variants: {
-        shape:{
-            circle:"rounded-full",
-            square:"rounded",
+        shape: {
+          circle: "rounded-full",
+          square: "rounded",
         },
       },
     }
-  )({shape:props.shape})
+  )({ shape: props.shape })
 });
 </script>
 
 <template>
   <span class="" :title="props.name" :class="ContainerClass">
-    <img
-      class="h-full w-full object-cover"
-      v-if="verifiedSrc"
-      :src="verifiedSrc"
-      :alt="props.name"
-    />
+    <img class="h-full w-full object-cover" v-if="verifiedSrc" :src="verifiedSrc" :alt="props.name" />
     <template v-else>{{ fallback }}</template>
     <span :class="innerBorderClass"></span>
   </span>

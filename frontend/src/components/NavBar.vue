@@ -12,7 +12,11 @@
             </router-link>
             <!-- Barra de búsqueda -->
             <div class="hidden md:block max-w-md mx-auto">
-              <SearchBar />
+              
+              <Field id="search">
+                <SearchBar />
+              </Field>
+
             </div>
           </div>
         </div>
@@ -28,12 +32,8 @@
             <!-- Mostrar información del usuario autenticado -->
             <div class="flex row items-center">
               <div class="hidden md:inline-block">
-                <router-link to="/crear-post">
-                  <button
-                    class="flex whitespace-nowrap font-bold text-lg items-center justify-center bg-blumine-400 text-white rounded-md pl-3 pr-4 py-2 mr-2">
-                    <PlusSmallIcon class="w-6 mr-1" />escribir
-                  </button>
-                </router-link>
+              
+                <Button to="/crear-post" :leftICon="PencilSquareIcon" size="lg">Escribir</Button>
               </div>
 
               <!-- Dropdown para el menú de usuario -->
@@ -53,17 +53,9 @@
           <template v-else>
             <!-- Usuario no autenticado, muestra botones de inicio de sesión y registro -->
             <div class="hidden md:block">
-              <router-link to="/login"
-                class="bg-blumine-400 text-white font-bold py-2 px-4 rounded mr-2 text-sm md:text-md lg:text-lg">
-                Iniciar Sesión
-              </router-link>
-              <router-link to="/register"
-                class="border-2 border-blumine-400 text-blumine-400 font-bold py-2 px-4 rounded text-sm md:text-md lg:text-lg">
-                Registrar
-              </router-link>
+              <Button to="/login" >Iniciar Sesión</Button>
+              <Button to="/register" ring>Registrar</Button>
             </div>
-
-      
 
             <!-- Dropdown para el menú de usuario en dispositivos móviles -->
             <Dropdown :options="mobileDropdownOptions" class="md:hidden">
@@ -80,10 +72,10 @@
 import { ref, watch } from 'vue';
 import { getAPI } from '@/services/axiosConfig';
 import store from '@/store';
-import SearchBar from './input_components/SearchBar.vue';
-import { UserCircleIcon, PlusSmallIcon, MagnifyingGlassIcon } from '@heroicons/vue/24/solid';
+import { UserCircleIcon, PencilSquareIcon, MagnifyingGlassIcon } from '@heroicons/vue/24/solid';
 import Avatar from './Avatar.vue';
-import Dropdown from '../components/Dropdown.vue'; // Ajusta la ruta según tu estructura de carpetas
+import Dropdown from '../components/Dropdown.vue'; 
+import { Field,SearchBar,Button } from './input_components'
 
 const user = ref({ name: '', profile_image: '' });
 const isAuthenticated = ref(false);
