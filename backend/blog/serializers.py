@@ -17,6 +17,9 @@ class CookieTokenRefreshSerializer(TokenRefreshSerializer):
             raise InvalidToken('No valid token found in cookie \'refresh_token\'')
         
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    default_error_messages = {
+        'no_active_account': 'Credenciales inválidas. Por favor, verifica tu correo electrónico y contraseña.'
+    }
     username_field = 'email'
 
 class PostSerializer(serializers.ModelSerializer):

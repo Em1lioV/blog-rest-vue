@@ -20,10 +20,11 @@ from rest_framework import filters
 import os
 
 from .models import Post,Role
-from .serializers import PostSerializer ,CustomPostAuthorSerializer,UserSerializer,RoleSerializer,CookieTokenRefreshSerializer, UserShortSerializer,PostAuthorSerializer
+from .serializers import PostSerializer ,CustomPostAuthorSerializer,UserSerializer,RoleSerializer,CustomTokenObtainPairSerializer,CookieTokenRefreshSerializer, UserShortSerializer,PostAuthorSerializer
 
 
 class CookieTokenObtainPairView(TokenObtainPairView):
+  serializer_class = CustomTokenObtainPairSerializer
   def finalize_response(self, request, response, *args, **kwargs):
     if response.data.get('refresh'):
         cookie_max_age = 3600 * 24 * 14 # 14 days
