@@ -32,7 +32,7 @@
 
 <script setup>
 import { ref, defineProps } from 'vue';
-import useClickOutside from '../util/useClickOutside';
+import useClickOutside from '../composables/useClickOutside';
 
 const { options } = defineProps(['options']);
 const isOpen = ref(false);

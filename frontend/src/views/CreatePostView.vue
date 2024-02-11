@@ -56,8 +56,6 @@ import { Field,Input,TinyEditor,CoverImageInput,Button } from '@/components/inpu
 import TinyEditorSkeleton from '@/components/TinyEditorSkeleton.vue';
 
 
-
-
 const route = useRouter();
 const post = ref({
   title: '',

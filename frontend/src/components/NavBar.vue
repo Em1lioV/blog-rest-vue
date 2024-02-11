@@ -32,8 +32,7 @@
             <!-- Mostrar información del usuario autenticado -->
             <div class="flex row items-center">
               <div class="hidden md:inline-block">
-              
-                <Button to="/crear-post" :leftICon="PencilSquareIcon" size="lg">Escribir</Button>
+                <Button to="/crear-post" :leftICon="PencilSquareIcon()" size="lg">Escribir</Button>
               </div>
 
               <!-- Dropdown para el menú de usuario -->
@@ -96,9 +95,13 @@ const fetchUserData = async () => {
   try {
     const url = '/user/navbar/';
     const response = await getAPI(url, { requiresAuth: true });
-    user.value.name = response.data.name;
-    if (response.data.profile_image) {
-      user.value.profile_image = 'api' + response.data.profile_image;
+    if (response && response.data) {
+      user.value.name = response.data.name;
+      if (response.data.profile_image) {
+        user.value.profile_image = 'api' + response.data.profile_image;
+      }
+    } else {
+      console.error('La respuesta del servidor no contiene datos válidos:', response);
     }
   } catch (error) {
     console.error('Error al obtener datos del usuario:', error);

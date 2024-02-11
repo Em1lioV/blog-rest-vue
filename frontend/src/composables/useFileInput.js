@@ -1,4 +1,4 @@
-import { ref, onUnmounted } from 'vue';
+import { ref, onUnmounted } from "vue";
 
 const useFileInput = (emitUpdateModelValue) => {
   const fileUrl = ref(null);
@@ -20,6 +20,7 @@ const useFileInput = (emitUpdateModelValue) => {
 
   const removeFile = () => {
     fileUrl.value = null;
+    fileInput.value.value = null;
     emitUpdateModelValue(null);
   };
 
@@ -34,7 +35,7 @@ const useFileInput = (emitUpdateModelValue) => {
     fileInput,
     openFileInput,
     handleFileChange,
-    removeFile
+    removeFile,
   };
 };
 

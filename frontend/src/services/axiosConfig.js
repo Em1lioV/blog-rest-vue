@@ -1,6 +1,8 @@
 import axios from "axios";
 import store from "@/store";
 import { jwtDecode } from "jwt-decode";
+import { getValidationError } from "@/util/errorHandler";
+import { showErrorAlert } from "@/util/sweetAlert";
 
 let isRefreshing = false;
 let refreshSubscribers = [];
@@ -18,9 +20,10 @@ const configureAxios = (baseURL, headers) => {
     const requiresAuth = config.requiresAuth || false;
 
     if (requiresAuth) {
-
       if (!store.getters.accessToken) {
-        console.log("No hay token de acceso. Configuración enviada directamente.");
+        console.log(
+          "No hay token de acceso. Configuración enviada directamente."
+        );
         return config;
       }
 
@@ -32,7 +35,8 @@ const configureAxios = (baseURL, headers) => {
           isRefreshing = true;
 
           // Inicia la renovación del token si no hay una ya en progreso
-          refreshTokenPromise = refreshTokenPromise || store.dispatch("refreshToken");
+          refreshTokenPromise =
+            refreshTokenPromise || store.dispatch("refreshToken");
 
           try {
             const newAccessToken = await Promise.race([
@@ -43,12 +47,19 @@ const configureAxios = (baseURL, headers) => {
             ]);
 
             if (newAccessToken) {
-              console.log("Token de acceso renovado con éxito, nuevo token: " + newAccessToken);
+              console.log(
+                "Token de acceso renovado con éxito, nuevo token: " +
+                  newAccessToken
+              );
               config.headers.Authorization = `Bearer ${newAccessToken}`;
-              refreshSubscribers.forEach((callback) => callback(newAccessToken));
+              refreshSubscribers.forEach((callback) =>
+                callback(newAccessToken)
+              );
               return config;
             } else {
-              console.log("La renovación del token falló. Desconectando usuario y cancelando solicitudes pendientes.");
+              console.log(
+                "La renovación del token falló. Desconectando usuario y cancelando solicitudes pendientes."
+              );
               refreshSubscribers.forEach((callback) => callback(null));
             }
           } catch (error) {
@@ -67,11 +78,15 @@ const configureAxios = (baseURL, headers) => {
         return new Promise((resolve, reject) => {
           refreshSubscribers.push((newAccessToken) => {
             if (newAccessToken) {
-              console.log("Token de acceso renovado. Resolviendo la promesa con la configuración actualizada.");
+              console.log(
+                "Token de acceso renovado. Resolviendo la promesa con la configuración actualizada."
+              );
               config.headers.Authorization = `Bearer ${newAccessToken}`;
               resolve(config);
             } else {
-              console.log("No hay nuevo token de acceso. Rechazando la promesa.");
+              console.log(
+                "No hay nuevo token de acceso. Rechazando la promesa."
+              );
               reject(new Error("No new access token"));
             }
           });
@@ -83,19 +98,32 @@ const configureAxios = (baseURL, headers) => {
         });
       }
 
-      console.log("Configurando la solicitud con el token de acceso existente.");
+      console.log(
+        "Configurando la solicitud con el token de acceso existente."
+      );
       config.headers.Authorization = `Bearer ${store.getters.accessToken}`;
     }
 
     return config;
   });
 
+  instance.interceptors.response.use(
+    (response) => {
+      return response;
+    },
+    (error) => {
+      const errorDetails = getValidationError(error);
+      if (!errorDetails.validation) {
+        showErrorAlert(errorDetails);
+      }
+      return Promise.reject(errorDetails);
+    }
+  );
+
   return instance;
 };
 
 export const getAPI = configureAxios("/api", {
-
-  
   "Content-Type": "application/json",
 });
 export const getAPImultipart = configureAxios("/api", {

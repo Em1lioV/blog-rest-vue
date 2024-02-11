@@ -10,7 +10,6 @@
             </h2>
         </div>
 
-        <p v-if="incorrectAuth">credenciales incorrectas - por favor intente de nuevo</p>
         <div v-on:submit.prevent="login" class="mt-5 sm:mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
             <form class="space-y-6" action="#" method="POST">
                 <div>
@@ -59,7 +58,7 @@ import { useStore } from 'vuex';
 
 const email = ref('');
 const password = ref('');
-const incorrectAuth = ref(false);
+
 
 const router = useRouter();
 const store = useStore();
@@ -74,8 +73,6 @@ const login = async () => {
         await store.dispatch('userLogin', data);
         router.push({ name: 'home' });
     } catch (err) {
-        console.log(err);
-        incorrectAuth.value = true;
     }
 };
 
