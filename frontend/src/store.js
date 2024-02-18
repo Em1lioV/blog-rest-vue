@@ -44,7 +44,7 @@ export default createStore({
 
     async userLogin({ commit, dispatch }, userCredentials) {
       try {
-        const response = await getAPI.post("/token/", {
+        const response = await getAPI.post("token/", {
           email: userCredentials.email,
           password: userCredentials.password,
         });
