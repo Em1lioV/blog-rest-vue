@@ -19,9 +19,9 @@ const routes = [
     component: () => import( '../views/BlogView.vue')
   },
   {
-    path: '/post/:slug',
     name: 'article',
-    component: () => import( '../views/ArticleView.vue'),
+    path: '/posts/:slug(.*)-:id',
+    component: () => import('../views/ArticleView.vue'),
     props: true,
   },
   {
@@ -40,10 +40,9 @@ const routes = [
     component: () => import( '../views/RegisterView.vue')
   },
   {
-    path: '/profile', 
+    path: '/profile/:id', 
     name: 'profile',
-    component: () => import( '../views/UserView.vue'),
-    meta: { requiresAuth: true }
+    component: () => import( '../views/UserView.vue')
   },
   {
     path: '/me/stories', 
