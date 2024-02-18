@@ -1,31 +1,34 @@
-// utils/sweetAlert.js
-
 import Swal from "sweetalert2";
 
-export const showAlert = (type, message, title = "") => {
-  Swal.fire({
-    icon: type,
-    title: title,
-    text: message,
-  });
-};
+const sweetAlert = {
+  showAlert(type, message, title = "") {
+    Swal.fire({
+      icon: type,
+      title: title,
+      text: message,
+    });
+  },
 
-export const showSuccessAlert = (message, title = "Success") => {
-  showAlert("success", message, title);
-};
+  showSuccessAlert(message, title = "Success") {
+    this.showAlert("success", message, title);
+  },
 
-export const showErrorAlert = (error) => {
+  showErrorAlert(error) {
     let errorMessage = error.detail || error.message;
 
     Swal.fire({
-        icon: "error",
-        text:errorMessage,
+      icon: "error",
+      text: errorMessage,
     });
-};
-export const showInfoAlert = (message, title = "Info") => {
-  showAlert("info", message, title);
+  },
+
+  showInfoAlert(message, title = "Info") {
+    this.showAlert("info", message, title);
+  },
+
+  showWarningAlert(message, title = "Warning") {
+    this.showAlert("warning", message, title);
+  },
 };
 
-export const showWarningAlert = (message, title = "Warning") => {
-  showAlert("warning", message, title);
-};
+export default sweetAlert;

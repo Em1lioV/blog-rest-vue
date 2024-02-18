@@ -13,10 +13,13 @@ export const getValidationError = (error) => {
     const statusMessage = statusMatcher[statusCode];
     const errorMessage = statusMessage || 'Se ha producido un error. Por favor, inténtalo de nuevo más tarde.';
 
-    const validationErrors = errorData && errorData.errors ? {} : null;
-    if (errorData && errorData.errors) {
-        for (let field in errorData.errors) {
-            validationErrors[field] = errorData.errors[field][0];
+    let validationErrors = null;
+    if (errorData) {
+        validationErrors = {};
+        for (let field in errorData) {
+            if (Array.isArray(errorData[field])) {
+                validationErrors[field] = errorData[field][0];
+            }
         }
     }
 
@@ -24,11 +27,10 @@ export const getValidationError = (error) => {
     const errorDetails = {
         status: statusCode,
         original: error,
-        validation: validationErrors || null,
+        validation: validationErrors,
         message: errorMessage,
         detail: errorData ? errorData.detail : null
     };
 
     return errorDetails;
 };
-
