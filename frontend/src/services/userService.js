@@ -1,18 +1,36 @@
-import { getAPI,getAPImultipart } from "@/services/axiosConfig";
+import { getAPI, getAPImultipart } from "@/services/axiosConfig";
 
 const userService = {
   // Función para crear un nuevo usuario
   async createUser(userData) {
     return await getAPImultipart.post("users/", userData);
   },
-  
+
   // Función para obtener la información de un usuario por su ID
   async getUserById(userId) {
     try {
-      const response = await getAPI.get(`/users/${userId}`);
+      const response = await getAPI.get(`/users/${userId}/`);
       return response.data;
     } catch (error) {
       throw new Error("Error getting user by ID: " + error.message);
+    }
+  },
+
+  async getUserSession() {
+    try {
+      const response = await getAPI.get('/users/logged/', { requiresAuth: true });
+      return response.data;
+    } catch (error) {
+      throw new Error("Error getting user by ID: " + error.message);
+    }
+  },
+
+  async getUserPartial() {
+    try {
+      const response = await getAPI.get('/users/partial/', { requiresAuth: true });
+      return response.data;
+    } catch (error) {
+      return error;
     }
   },
 
