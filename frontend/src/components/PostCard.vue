@@ -1,6 +1,6 @@
 <template>
   <article
-    :class="['max-w-3xl w-full flex flex-row items-start justify-between border border-gray-200 rounded-lg shadow m-2', post.author ? ' h-[200px] sm:h-[250px] md:h-[270px]' : ' h-[140px] sm:h-[170px] md:h-[200px]']">
+    :class="['max-w-3xl w-full flex flex-row items-start justify-between border border-gray-200 rounded-lg shadow m-2 overflow-hidden', post.author ? ' h-[200px] sm:h-[250px] md:h-[270px]' : ' h-[140px] sm:h-[170px] md:h-[200px]']">
     <div :class="['w-[65%] h-full p-4 flex flex-col', post.author ? 'justify-between' : '']">
       <div class="flex items-center text-xs" v-if="post.author">
         <router-link :to="'/profile/' + post.author.id" class="none">
