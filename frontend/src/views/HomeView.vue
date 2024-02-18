@@ -22,6 +22,7 @@ onMounted(async () => {
     const url = 'posts/';
     const response = await getAPI.get(url);
     posts.value = response.data;
+    console.log(response.data);
   } catch (error) {
     console.error("Error al obtener los datos:", error);
   } finally {

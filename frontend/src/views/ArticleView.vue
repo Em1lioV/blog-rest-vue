@@ -11,29 +11,33 @@ import { ref, onMounted, watch } from 'vue';
 import { getAPI } from '@/services/axiosConfig';
 import Post from '@/components/Post.vue';
 import { useRoute } from 'vue-router';
+import { PostService } from '@/services';
 
-const postSlug = ref(null);
+const postId = ref(null);
 const post = ref(null);
 const route = useRoute()
 // Obtener el ID del post de los parámetros de la ruta
 const getPostIdFromRoute = () => {
-    postSlug.value = route.params.slug;
+    postId.value = route.params.id;
 };
 
 // Cargar los detalles del post cuando el ID cambia
-watch(postSlug, async () => {
-    if (postSlug.value) {
+watch(postId, async () => {
+    if (postId.value) {
         try {
-            const url = `post/${postSlug.value}`;
-            const response = await getAPI.get(url);
-            post.value = response.data;
+            const response = await PostService.getPostById(postId.value);
+            post.value = response;
         } catch (error) {
             console.error('Error al obtener los detalles del post:', error);
         }
     }
 });
 
+
+
+
 onMounted(() => {
     getPostIdFromRoute();
 });
 </script>
+

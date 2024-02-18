@@ -7,17 +7,17 @@
 
           <div class="sm:col-span-full mt-2">
             <Field id="coverImage" label="Imagen de Portada">
-              <CoverImageInput v-model="post.thumbnail" />
+              <CoverImageInput v-model="post.fields.thumbnail" />
             </Field>
           </div>
           <div class="sm:col-span-full mt-2">
             <Field id="title" label="Titulo" required>
-              <Input v-model="post.title" type="text" autocomplete="off" title="Ingrese un título válido" />
+              <Input v-model="post.fields.title" type="text" autocomplete="off" title="Ingrese un título válido" />
             </Field>
           </div>
           <div class="sm:col-span-full mt-2">
             <Field id="excerpt" label="Resumen">
-              <Input v-model="post.excerpt" type="text" autocomplete="off" />
+              <Input v-model="post.fields.excerpt" type="text" autocomplete="off" />
             </Field>
           </div>
           <div class="sm:col-span-full w-full mt-2">
@@ -26,7 +26,7 @@
                   <TinyEditorSkeleton/>
                 </div>
                 <div  v-show="!showEditorSkeleton">
-                  <TinyEditor  v-model="post.content" @editor-loaded="handleEditorLoaded"/>
+                  <TinyEditor  v-model="post.fields.content" @editor-loaded="handleEditorLoaded"/>
                 </div>
               
             </Field>
@@ -52,15 +52,17 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { getAPImultipart } from '@/services/axiosConfig';
 import { Field,Input,TinyEditor,CoverImageInput,Button } from '@/components/input_components';
-
+import PostService from '@/services/postService';
+import { useForm } from '@/composables';
 import TinyEditorSkeleton from '@/components/TinyEditorSkeleton.vue';
 
 
 const route = useRouter();
-const post = ref({
+const post = useForm({
   title: '',
   excerpt: '',
   content: '',
+  status:'',
   thumbnail: null,
 });
 
@@ -69,7 +71,6 @@ const showEditorSkeleton = ref(true);
 const handleEditorLoaded = () => {
   showEditorSkeleton.value = false;  
 };
-
 
 
 const volver = () => {
@@ -93,41 +94,16 @@ const submitPublished = async (event) => {
 };
 
 
-const submitPost = async (status) => {
-  try {
-    const formData = new FormData();
-    formData.append('title', post.value.title);
-    formData.append('content', post.value.content);
-
-    if (post.value.excerpt) {
-      formData.append('excerpt', post.value.excerpt);
-    }
-
-    if (post.value.thumbnail) {
-      formData.append('thumbnail', post.value.thumbnail);
-    }
-
-    formData.append('status', status); // Add the status field
-    const url = 'post/create/'
-    const response = await getAPImultipart.post(url, formData, { requiresAuth: true })
-
-    if (response.status === 201) {
-      console.log("Publicación exitosa:", response.data);
-      route.push({ name: 'post-detail', params: { slug: response.data.slug } });
-    } else {
-      console.error("Error en la publicación:", response.data);
-      if (response.data && response.data.slug) {
-        console.error('Error de slug:', response.data.slug);
-      }
-    }
-  } catch (error) {
-    if (error.response && error.response.status === 400) {
-      console.error('Error de solicitud HTTP 400:', error.response.data);
-    } else {
-      console.error('Error al enviar el formulario:', error);
-    }
-  }
-};
+async function submitPost(status) {
+  post.fields.status = status
+  await post.submit(async fields => {
+    const response = await PostService.createPost(fields);
+    const slug = response.data.slug;
+    const id = response.data.id;
+    
+    await route.push({ name: 'article', params: { slug: slug,id: id}});
+  });
+}
 
 
 </script>
