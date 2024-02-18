@@ -1,43 +1,53 @@
-<template>
-    <div class="mx-auto max-w-3xl pb-8 px-6 lg:px-8">
-        <div v-if="post">
-            <Post :post="post" />
-        </div>
-    </div>
-</template>
-
 <script setup>
-import { ref, onMounted, watch } from 'vue';
-import { getAPI } from '@/services/axiosConfig';
-import Post from '@/components/Post.vue';
-import { useRoute } from 'vue-router';
+import { ref, watch } from 'vue';
 import { PostService } from '@/services';
+import Post from '@/components/Post.vue';
+import { useRoute, useRouter } from 'vue-router';
 
-const postId = ref(null);
+const loading = ref(false);
 const post = ref(null);
-const route = useRoute()
-// Obtener el ID del post de los parámetros de la ruta
-const getPostIdFromRoute = () => {
-    postId.value = route.params.id;
-};
+const error = ref(null);
+const route = useRoute();
+const router = useRouter();
 
-// Cargar los detalles del post cuando el ID cambia
-watch(postId, async () => {
-    if (postId.value) {
+let previousId = null;
+
+// Observar los cambios en la ruta y cargar los datos del post
+watch(() => route.params, async (newParams, oldParams) => {
+    const { id: newId, slug: newSlug } = newParams;
+    const { id: oldId } = oldParams || {};
+
+    if (newId !== oldId) {
         try {
-            const response = await PostService.getPostById(postId.value);
+            loading.value = true;
+            const response = await PostService.getPostById(newId);
+            const { slug: fetchedSlug } = response;
             post.value = response;
-        } catch (error) {
-            console.error('Error al obtener los detalles del post:', error);
+            error.value = null;
+
+            if (fetchedSlug !== newSlug) {
+                router.replace({ params: { id: newId, slug: fetchedSlug } });
+            }
+        } catch (err) {
+            console.error('Error fetching post:', err);
+            error.value = err.message || 'Failed to fetch post';
+        } finally {
+            loading.value = false;
+            previousId = newId;
         }
+    } else if (oldParams && newSlug !== post.value.slug) {
+        router.replace({ params: { id: newId, slug: post.value.slug } });
     }
-});
+}, { immediate: true });
 
 
-
-
-onMounted(() => {
-    getPostIdFromRoute();
-});
 </script>
 
+<template>
+  <div class="mx-auto max-w-3xl pb-8 px-6 lg:px-8">
+    <div v-if="loading">Loading...</div>
+    <div v-else-if="error">{{ error }}</div>
+    <div v-else><Post v-if="post" :post="post" /></div>
+    
+  </div>
+</template>
