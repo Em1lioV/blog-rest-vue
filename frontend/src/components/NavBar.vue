@@ -11,9 +11,9 @@
               <img class="h-[80px] w-auto mx-4" src="../assets/logo.png" alt="Tu Compañía" />
             </router-link>
             <!-- Barra de búsqueda -->
-            <div class="hidden md:block max-w-md mx-auto">
-              
-              <Field id="search">
+            <div class="hidden md:flex max-w-md mx-auto items-center">
+
+              <Field id="search" :BottomSlot="false">
                 <SearchBar />
               </Field>
 
@@ -36,14 +36,14 @@
               </div>
 
               <!-- Dropdown para el menú de usuario -->
-              <Dropdown :options="dropdownOptions">
+              <Dropdown :options="dropdownOptions" v-if="user">
                 <!-- Botón del dropdown personalizado -->
-                <span v-if="user" class="cursor-pointer mx-3 flex items-center">
-                  <Avatar :src="user.profile_image" :name="user.name" />
+                <span class="cursor-pointer mx-3 flex items-center">
+                  <Avatar :src="user.profile_image" :name="user.fullname" :initials="user.initials" />
                 </span>
                 <!-- Nombre de usuario -->
                 <p class="hidden sm:block xl:text-xl text-lg sm:text-md cursor-pointer" @click="toggleUserDropdown">
-                  {{ user.name }}
+                  {{ user.fullname }}
                 </p>
               </Dropdown>
             </div>
@@ -52,7 +52,7 @@
           <template v-else>
             <!-- Usuario no autenticado, muestra botones de inicio de sesión y registro -->
             <div class="hidden md:block">
-              <Button to="/login" >Iniciar Sesión</Button>
+              <Button to="/login">Iniciar Sesión</Button>
               <Button to="/register" ring>Registrar</Button>
             </div>
 
@@ -68,20 +68,33 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
-import { getAPI } from '@/services/axiosConfig';
+import { computed, ref, watch } from 'vue';
 import store from '@/store';
 import { UserCircleIcon, PencilSquareIcon, MagnifyingGlassIcon } from '@heroicons/vue/24/solid';
 import Avatar from './Avatar.vue';
-import Dropdown from '../components/Dropdown.vue'; 
-import { Field,SearchBar,Button } from './input_components'
+import Dropdown from '../components/Dropdown.vue';
+import { Field, SearchBar, Button } from './input_components'
+import { userService } from '@/services';
 
-const user = ref({ name: '', profile_image: '' });
+const user = ref({});
 const isAuthenticated = ref(false);
 
 const logout = () => {
   store.dispatch('userLogout');
 };
+
+const dropdownOptions = computed(() => {
+  if (!user) return []; 
+
+  return [
+    { label: 'Escribir', to: '/crear-post', className: 'md:hidden px-4 py-2 text-xl text-white bg-blumine-400 hover:!bg-blumine-500' },
+    { label: 'Tu Perfil', to: `/profile/${user.value.id}` },
+    { label: 'Mis Publicaciones', to: '/me/stories' },
+    { separator: true },
+    { label: 'Cerrar Sesión', onClick: logout, className: 'text-red-500' },
+  ];
+});
+
 
 
 const checkAuthentication = () => {
@@ -93,36 +106,20 @@ const checkAuthentication = () => {
 
 const fetchUserData = async () => {
   try {
-    const url = '/user/navbar/';
-    const response = await getAPI(url, { requiresAuth: true });
-    if (response && response.data) {
-      user.value.name = response.data.name;
-      if (response.data.profile_image) {
-        user.value.profile_image = 'api' + response.data.profile_image;
-      }
-    } else {
-      console.error('La respuesta del servidor no contiene datos válidos:', response);
-    }
+    const responseUser = await userService.getUserPartial();
+
+    user.value = responseUser;
+
+    console.log(responseUser);
   } catch (error) {
     console.error('Error al obtener datos del usuario:', error);
   }
 };
 
-const dropdownOptions = [
-  { label: 'Escribir', to: '/crear-post', className: 'md:hidden px-4 py-2 text-xl text-white bg-blumine-400 hover:!bg-blumine-500' },
-  { label: 'Tu Perfil', to: '/profile' },
-  { label: 'Mis Publicaciones', to: '/me/stories' },
-  { separator: true },
-  { label: 'Cerrar Sesión', onClick: logout, className: 'text-red-500' },
-];
-
 const mobileDropdownOptions = [
   { label: 'Iniciar Sesión', to: '/login' },
   { label: 'Registrar', to: '/register' },
 ];
-
-
-
 
 checkAuthentication();
 
@@ -132,11 +129,9 @@ watch(
     isAuthenticated.value = !!newAccessToken;
 
     if (!isAuthenticated.value) {
-      user.value = {
-        name: '',
-        profile_image: '',
-      };
+      user.value = {};
     }
   }
 );
 </script>
+
