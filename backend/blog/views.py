@@ -1,26 +1,22 @@
 from django.shortcuts import get_object_or_404
-from django.db import models
+from rest_framework import viewsets
 from rest_framework.views import APIView
-from rest_framework.generics import CreateAPIView 
+from rest_framework.generics import ListAPIView,ListCreateAPIView
 from rest_framework.response import Response
-from django.utils.html import strip_tags
-from django.db.models import Exists, OuterRef,  Value, Case, When, F
-from django.db.models.functions import Substr, Concat
+from rest_framework.decorators import action
 
-from rest_framework.parsers import MultiPartParser
+
 from rest_framework_simplejwt.views import TokenObtainPairView,TokenRefreshView
-from rest_framework import status,generics
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.permissions import IsAuthenticated
-from django.contrib.auth import logout 
 from rest_framework_simplejwt.exceptions import TokenError
-from rest_framework import exceptions
+
+from rest_framework.permissions import IsAuthenticated
+
 from rest_framework import filters
 
-import os
 
-from .models import Post,Role
-from .serializers import PostSerializer ,CustomPostAuthorSerializer,UserSerializer,RoleSerializer,CustomTokenObtainPairSerializer,CookieTokenRefreshSerializer, UserShortSerializer,PostAuthorSerializer
+from .models import Post,Role,User
+from .serializers import *
 
 
 class CookieTokenObtainPairView(TokenObtainPairView):
@@ -64,113 +60,102 @@ class LogoutView(APIView):
 
         return response
 
+from rest_framework import viewsets
 
-class BlogListView(APIView):
-    def get(self,request,*args,**kwargs):
-        posts = Post.postobjects.all()[0:4]
-        serializer = PostSerializer(posts,many=True)
-
-        return Response(serializer.data)
-
-
-
-class PostListView(generics.ListAPIView):
-    serializer_class = CustomPostAuthorSerializer
+class PostViewSet(viewsets.ModelViewSet):
+    queryset = Post.objects.filter(status='published')
     filter_backends = [filters.SearchFilter]
     search_fields = ['title', 'excerpt']
 
+    def get_permissions(self):
+        if self.action in ['create', 'update', 'partial_update', 'destroy']:
+            permission_classes = [IsAuthenticated]
+        else:
+            permission_classes = []
+        return [permission() for permission in permission_classes]
+
+    def perform_create(self, serializer):
+        # Asignar el autor al usuario autenticado y establecer el valor del campo 'slug'
+        serializer.save(author=self.request.user)
+
     def get_queryset(self):
-        return Post.postobjects.select_related('author__role').filter(status='published')
-    
-class PostDetailView(APIView):
-    def get(self,request,post_slug,*args,**kwargs):
-        post = get_object_or_404(Post, slug = post_slug)
+        if self.action == 'list':
+            queryset = Post.objects.filter(status='published').select_related('author__role')
+        else:
+            queryset = Post.objects.filter(status='published')
+        return queryset
 
-        serializer = PostSerializer(post)
+    def get_serializer_class(self):
+        if self.action in ['list','retrieve']:
+            return PostAuthorSerializer  # Reemplaza ListPostSerializer con tu propio serializer
+        return PostSerializer  # Reemplaza PostSerializer con tu propio serializer
 
-        return Response(serializer.data)
-    
-class PostCreateView(CreateAPIView):
+class UserPostsListViewByID(ListAPIView):
+    serializer_class = PostSerializer
+
+    def get_queryset(self):
+        user_id = self.kwargs.get('user_id')
+        if user_id:
+            user = User.objects.get(pk=user_id)
+            return Post.objects.filter(author=user, status='published')
+        else:
+            return Post.objects.none()  # Devuelve una lista vacía si no se proporciona user_id
+
+class UserPostsListViewByRequestUser(ListAPIView):
     serializer_class = PostSerializer
     permission_classes = [IsAuthenticated]
 
-    def perform_create(self, serializer):
-        # Asigna el autor al usuario autenticado y establece el valor del campo 'slug' antes de guardar
-        serializer.save(author=self.request.user)
-        
-class PostDeleteView(generics.DestroyAPIView):
-    serializer_class = Post
-    def get_object(self):
-        pk = self.kwargs.get('pk')
-        return Post.objects.get(pk=pk)
-    
-class PostUpdateView(generics.UpdateAPIView):
-    serializer_class = PostSerializer
-
-    def get_object(self):
-        pk = self.kwargs.get('pk')
-        return Post.objects.get(pk=pk)
-    
+    def get_queryset(self):
+        return Post.objects.filter(author=self.request.user)
 
 
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
+    def get_permissions(self):
+        if self.action in ['update', 'partial_update', 'destroy']:
+            permission_classes = [IsAuthenticated]
+        else:
+            permission_classes = []
+        return [permission() for permission in permission_classes]
 
+    def get_user_object(self, pk=None):
+        return get_object_or_404(self.queryset, pk=pk)
 
-class RegisterView(APIView):
-    parser_classes = [MultiPartParser]
+    def get_user_serializer(self, user, request_user):
+        if user == request_user:
+            return UserSerializer(user, context={'request': self.request}) 
+        else:
+            return UserShortSerializer(user, context={'request': self.request})
 
-    def post(self, request, *args, **kwargs):
-        try:
-            # Log information about the incoming request
-          
+    def retrieve(self, request, pk=None):
+        user = self.get_user_object(pk=pk)
+        serializer = self.get_user_serializer(user, request.user)
+        return Response(serializer.data)
 
-            # Serialize and save user data
-            serializer = UserSerializer(data=request.data)
-            serializer.is_valid(raise_exception=True)
-            serializer.save()
+    @action(detail=False, methods=['get'])
+    def partial(self, request):
+        user = request.user
+        serializer = UserShortSerializer(user)
+        return Response(serializer.data)
 
-            # Log information about the successful registration
-       
+    @action(detail=False, methods=['get'])
+    def logged(self, request):
+        user = request.user
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
 
-            # Return a response with the serialized data
-            return Response(serializer.data)
-        except Exception as e:
-            # Log the exception for further debugging
-    
-
-            # Return a response with details about the error
-            return Response({"detail": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-class RoleListView(generics.ListCreateAPIView):
+class RoleListCreateView(ListCreateAPIView):
+    queryset = Role.objects.all()
     serializer_class = RoleSerializer
 
     def get_queryset(self):
-        queryset = Role.objects.all()
+        queryset = super().get_queryset()
         description = self.request.query_params.get('description')
         if description:
             queryset = queryset.filter(description__icontains=description)
         return queryset
-    
-class AddRoleView(APIView):
-    def post(self,request):
-        serializer = RoleSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
-    
-class UserView(APIView):
-    def get(self, request):
-        permission_classes = [IsAuthenticated]
-        user = request.user
-        serializer = UserSerializer(user)
-        return Response(serializer.data)
-    
-class UserShortView(APIView):
-    def get(self, request):
-        permission_classes = [IsAuthenticated]
-        user = request.user
-        serializer = UserShortSerializer(user)
-        return Response(serializer.data)
 
 
 
