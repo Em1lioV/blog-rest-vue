@@ -8,10 +8,9 @@ const PostService = {
   async getPostById(PostId) {
     try {
       const response = await getAPI.get(`/posts/${PostId}/`);
-      console.log(response);
       return response.data;
     } catch (error) {
-      return error;
+      throw error;
     }
   },
   async getPostsUserByRequest() {
@@ -19,7 +18,7 @@ const PostService = {
       const response = await getAPI.get('/users/posts/', { requiresAuth: true });
       return response.data;
     } catch (error) {
-      return error;
+      throw error;
     }
   },
   
@@ -28,7 +27,7 @@ const PostService = {
       const response = await getAPI.get(`/users/posts/${UserId}/`);
       return response.data;
     } catch (error) {
-      return error;
+      throw error;
     }
   },
 
