@@ -1,19 +1,21 @@
 from django.urls import path
-from .views import  *
-app_name="blog"
+from rest_framework.routers import DefaultRouter
+from .views import *
+
+app_name = "blog"
+
+# Define el enrutador para los ViewSets
+router = DefaultRouter()
+router.register(r'posts', PostViewSet, basename='post')
+router.register(r'users', UserViewSet, basename='user')
 
 urlpatterns = [
-    path('posts/',PostListView.as_view(), name="blog-list"),
-    path('post/<post_slug>',PostDetailView.as_view()),
-    path('post/create/', PostCreateView.as_view(), name='post-create'),
-    path('post/<int:pk>/delete/', PostDeleteView.as_view(), name='post-delete'),
-    path('post/<int:pk>/update/', PostUpdateView.as_view(), name='post-update'),
-    path('token/',CookieTokenObtainPairView.as_view()),
-    path('logout/',LogoutView.as_view()),
-    path('token/refresh/', CookieTokenRefreshView.as_view()),
-    path('user/',UserView.as_view()),
-    path('user/navbar/',UserShortView.as_view()),
-    path('register/',RegisterView.as_view()),
-    path('addRole/',AddRoleView.as_view()),
-    path('roles/',RoleListView.as_view()),
+    path('token/', CookieTokenObtainPairView.as_view(), name='token-obtain'),
+    path('users/posts/<int:user_id>/', UserPostsListViewByID.as_view(), name='user_posts_list_by_id'),
+    path('users/posts/', UserPostsListViewByRequestUser.as_view(), name='user_posts_list_by_request_user'),
+    path('logout/', LogoutView.as_view(), name='logout'),
+    path('token/refresh/', CookieTokenRefreshView.as_view(), name='token-refresh'),
+    path('roles/',RoleListCreateView.as_view(),name='role-list-create'),
 ]
+
+urlpatterns += router.urls
