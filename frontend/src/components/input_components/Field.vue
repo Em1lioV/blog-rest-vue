@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div :class="!props.BottomSlot? '': 'mb-1'">
         <div class="flex items-center justify-between">
             <Label v-if="props.label" :for="props.id" :required="props.required">
                 {{ props.label }}
@@ -21,12 +21,15 @@
             </div>
         </div>
         <slot />
-        <ErrorMessage v-if="props.error">
-            {{ props.error }}
-        </ErrorMessage>
-        <HelperMessage v-if="props.help && !props.error">
-            {{ props.help }}
-        </HelperMessage>
+        <div v-if="props.BottomSlot" class="min-h-[20px] mt-1" >
+            <ErrorMessage v-if="props.error">
+                {{ props.error }}
+            </ErrorMessage>
+            <HelperMessage v-if="props.help && !props.error">
+                {{ props.help }}
+            </HelperMessage>
+
+        </div>
     </div>
 </template>
   
@@ -35,7 +38,6 @@ import { defineProps, computed, provide } from 'vue';
 import ErrorMessage from './ErrorMessage.vue';
 import HelperMessage from './HelperMessage.vue';
 import Label from './Label.vue';
-import Button from './Button.vue';
 import { v4 as uuid } from 'uuid';
 
 const props = defineProps({
@@ -65,6 +67,11 @@ const props = defineProps({
         type: [Object, String],
         default: null,
         description: 'Content for the left label slot or configuration object.'
+    },
+    BottomSlot: {
+        type: Boolean,
+        default: true,
+        description: 'Indicates whether the bottom slot must show'
     }
 });
 
@@ -79,4 +86,7 @@ provide('field', computed(() => {
         ariaDescribeBy: ariaDescribeBy.value
     };
 }));
+
+
+
 </script>
