@@ -82,7 +82,7 @@ const innerBorderClass = computed(() => {
 <template>
   <span class="" :title="props.name" :class="ContainerClass">
     <img class="h-full w-full object-cover" v-if="verifiedSrc" :src="verifiedSrc" :alt="props.name" />
-    <template v-else>{{ fallback }}</template>
+    <template v-else><span class="mt-[0.05rem]">{{ fallback }}</span></template>
     <span :class="innerBorderClass"></span>
   </span>
 </template>
