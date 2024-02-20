@@ -1,27 +1,27 @@
 <template>
   <article
-    :class="['max-w-3xl w-full flex flex-row items-start justify-between border border-gray-200 rounded-lg shadow m-2 overflow-hidden', post.author ? ' h-[200px] sm:h-[225px] md:h-[250px]' : ' h-[125px] sm:h-[150px] md:h-[175px]']">
-    <div :class="['w-[65%] h-full p-4 flex flex-col', post.author ? 'justify-between' : '']">
+    :class="['max-w-3xl w-full flex flex-row items-start justify-between border border-gray-200 rounded-lg shadow overflow-hidden', post.author ? ' h-[200px] sm:h-[225px] md:h-[250px]' : ' h-[125px] sm:h-[150px] md:h-[175px]']">
+    <div :class="['w-full h-full p-4 flex flex-col', post.author ? 'justify-between' : '']">
       <div class="flex items-center text-xs" v-if="post.author">
         <router-link :to="'/profile/' + post.author.id" class="none">
           <div class="text-start relative flex items-center gap-x-2">
             <Avatar :src="post.author.profile_image" :name="post.author.fullname" :initials="post.author.initials" />
-            <div class="text-sm leading-6">
-              <p class="font-semibold text-gray-900">{{ post.author.fullname }}</p>
-              <p class="text-gray-600 hidden sm:inline-block" v-if="post.author.role">{{ post.author.role.description }}
+            <div class="text-sm leading-1">
+              <p class="font-semibold text-gray-900 p-0">{{ post.author.fullname }}</p>
+              <p class="text-gray-600 hidden sm:inline-block p-0 m-0" v-if="post.author.role">{{
+                post.author.role.description }}
               </p>
             </div>
           </div>
         </router-link>
       </div>
-      <div class="group relative flex flex-col justify-center flex-grow"> <!-- Añade la clase flex-grow aquí -->
+      <div class="group relative flex flex-col justify-center flex-grow">
         <router-link :to="'/posts/' + post.slug + '-' + post.id">
           <h2
-            class="mt-1 text-sm sm:text-base md:text-lg text-start font-semibold leading-5 text-gray-900 group-hover:text-gray-600  !line-clamp-2">
+            class="mt-1 text-base md:text-lg text-start font-semibold leading-5 text-gray-900 group-hover:text-gray-600 !line-clamp-3  sm:!line-clamp-2">
             {{ post.title }}
           </h2>
-          <p class="mt-1 text-sm leading-5 text-gray-600 hidden sm:block sm:!line-clamp-2 md:!line-clamp-3">
-            <span v-if="post.excerpt">{{ post.excerpt }} - </span><span v-html="sanitizedContent"></span>
+          <p :class="PostPreviewClasses" v-html="PostPreview">
           </p>
         </router-link>
       </div>
@@ -32,22 +32,15 @@
             {{ post.category }}
           </router-link>
         </div>
-        <time :datetime="post.published" class="text-gray-500">
-          {{ new Date(post.published).toLocaleDateString("es-ES", { month: "short", day: "2-digit", year: "numeric" }) }}
+        <time :datetime="post.published" class="text-gray-600 text-sm md:text-base">
+          {{ formattedDate }}
         </time>
       </div>
     </div>
-    <div class="w-[35%]  h-full">
-      <router-link v-if="post.thumbnail" :to="'/posts/' + post.slug + '-' + post.id" class="w-full h-full object-cover ">
+    <div v-if="post.thumbnail" class="w-[50%]  h-full">
+      <router-link :to="'/posts/' + post.slug + '-' + post.id" class="w-full h-full object-cover ">
         <img :src="post.thumbnail" alt="" loading="lazy" class=" w-full h-full object-cover" />
       </router-link>
-
-      <router-link v-else :to="'/posts/' + post.slug + '-' + post.id" class="flex justify-center items-center h-full w-full p-4">
-       
-        <img src="../assets/logo.png" loading="lazy" alt="" class="max-h-full m-auto w-auto object-cover" />
-      </router-link>
-
-
 
     </div>
   </article>
@@ -65,15 +58,26 @@ const props = defineProps({
   },
 })
 
+
+
 const sanitizedContent = computed(() => {
   const textContent = DOMPurify.sanitize(props.post.content, { ALLOWED_TAGS: [] });
-
-  // Expresión regular para eliminar caracteres no visibles y espacios al inicio y al final del texto
   const trimmedText = textContent.replace(/^(?:&nbsp;|\s)+|(?:&nbsp;|\s)+$/g, '');
+  return trimmedText.trim().slice(0, 300);
+});
 
-  // Limitar el texto a no más de 300 caracteres
-  const truncatedText = trimmedText.slice(0, 300);
+const PostPreview = computed(() => {
+  return props.post.excerpt ? `${props.post.excerpt} - ${sanitizedContent.value}` : sanitizedContent.value;
+});
+const formattedDate = computed(() => {
+  return new Date(props.post.published).toLocaleDateString("es-ES", { month: "short", day: "2-digit", year: "numeric" });
+});
 
-  return truncatedText;
+const PostPreviewClasses = computed(() => {
+  return {
+    'hidden sm:block mt-1 text-sm md:text-base leading-1 text-gray-600': true,
+    'sm:!line-clamp-2': props.post.title.length > 45,
+    'sm:!line-clamp-3': props.post.title.length <= 45,
+  };
 });
 </script>
