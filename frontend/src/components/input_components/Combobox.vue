@@ -52,7 +52,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, defineEmits, defineProps, inject } from 'vue';
+import { ref, computed, watch, inject } from 'vue';
 import {
   Combobox,
   ComboboxInput,
@@ -132,7 +132,7 @@ watch(
 
 
 function handleUpdateModelValue(selected) {
-    
+
   if (props.createOption && selected?.missing) {
     isLoading.value = true;
     props.createOption(selected, option => {
@@ -143,7 +143,7 @@ function handleUpdateModelValue(selected) {
     });
   } else {
     const valueToSend = useModelValueValidator(selected, props.modelValue);
-    emit('update:modelValue', valueToSend); 
+    emit('update:modelValue', valueToSend);
     selectedValue.value = selected;
   }
 }

@@ -1,3 +1,11 @@
+<template>
+  <span class="" :title="props.name" :class="ContainerClass">
+    <img class="h-full w-full object-cover" v-if="verifiedSrc" :src="verifiedSrc" :alt="props.name" />
+    <template v-else><span class="mt-[0.05rem]">{{ fallback }}</span></template>
+    <span :class="innerBorderClass"></span>
+  </span>
+</template>
+
 <script setup>
 import { computed, watchEffect, ref } from "vue";
 import { cva } from "class-variance-authority";
@@ -78,11 +86,3 @@ const innerBorderClass = computed(() => {
   )({ shape: props.shape })
 });
 </script>
-
-<template>
-  <span class="" :title="props.name" :class="ContainerClass">
-    <img class="h-full w-full object-cover" v-if="verifiedSrc" :src="verifiedSrc" :alt="props.name" />
-    <template v-else><span class="mt-[0.05rem]">{{ fallback }}</span></template>
-    <span :class="innerBorderClass"></span>
-  </span>
-</template>

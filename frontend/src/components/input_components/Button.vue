@@ -1,7 +1,7 @@
 <template>
   <component :is="elementType" :class="buttonClass" :to="props.to" :disabled="props.disabled" :type="props.type">
-    <svg v-if="props.loading" class="animate-spin h-5 w-5 absolute" xmlns="http://www.w3.org/2000/svg"
-      fill="none" viewBox="0 0 24 24">
+    <svg v-if="props.loading" class="animate-spin h-5 w-5 absolute" xmlns="http://www.w3.org/2000/svg" fill="none"
+      viewBox="0 0 24 24">
       <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
       <path class="opacity-75" fill="currentColor"
         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
@@ -18,7 +18,7 @@
   
 <script setup>
 import { cva } from 'class-variance-authority';
-import { defineProps, computed } from 'vue';
+import { computed } from 'vue';
 
 const props = defineProps({
   leftICon: Object,
@@ -68,7 +68,7 @@ const baseButtonClass = cva(
         xm: 'text-xs px-2 min-h-[20px] min-w-[36px]',
         sm: 'text-sm px-3 min-h-[28px] min-w-[50px]',
         md: 'text-md px-4 min-h-[36px] min-w-[64px]',
-        lg: 'text-lg px-5 min-h-[44px] min-w-[78px]' ,
+        lg: 'text-lg px-5 min-h-[44px] min-w-[78px]',
         xl: 'text-xl px-6 min-h-[52px] min-w-[92px]',
       },
       block: {

@@ -8,19 +8,19 @@
     <!-- Contenido del dropdown -->
     <transition @before-enter="beforeEnter" @after-enter="afterEnter" @before-leave="beforeLeave"
       @after-leave="afterLeave">
-      <div v-if="isOpen" ref="dropdownRef" 
-        class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 overflow-hidden ring-black ring-opacity-5 focus:outline-none"
-      >
+      <div v-if="isOpen" ref="dropdownRef"
+        class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 overflow-hidden ring-black ring-opacity-5 focus:outline-none">
         <!-- Dropdown content -->
         <template v-for="(option, index) in options">
-        
+
           <hr v-if="option.separator" class="my-1 border-t border-gray-300" :key="`hr-${index}`">
-          
-          <RouterLink v-if="option.to" :to="option.to" :class="[ option.className,defaultClass]"
+
+          <RouterLink v-if="option.to" :to="option.to" :class="[option.className, defaultClass]"
             @click="handleOptionClick(option)" :key="`router-link-${index}`">
             {{ option.label }}
           </RouterLink>
-          <span v-if="option.onClick" :class="[ option.className,defaultClass]" @click="handleOptionClick(option)" :key="`span-${index}`">
+          <span v-if="option.onClick" :class="[option.className, defaultClass]" @click="handleOptionClick(option)"
+            :key="`span-${index}`">
             {{ option.label }}
           </span>
         </template>
@@ -31,7 +31,7 @@
 
 
 <script setup>
-import { ref, defineProps } from 'vue';
+import { ref } from 'vue';
 import useClickOutside from '../composables/useClickOutside';
 
 const { options } = defineProps(['options']);

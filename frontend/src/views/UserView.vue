@@ -1,6 +1,6 @@
 <template>
   <div class="mx-auto max-w-7xl pb-8 mt-5 px-6 lg:px-8 flex justify-center items-center flex-col">
-    <div v-if="userData" class="flex flex-row justify-start max-w-3xl w-full mt-6 gap-x-3 items-center">
+    <div v-if="userData" class="flex flex-row justify-start max-w-3xl w-full mt-6  mx-2 mb-2 gap-x-3 items-center">
       <div>
         <Avatar :initials="userData.initials" :name="userData.fullname" :src="userData.profile_image" size="md"/>
       </div>

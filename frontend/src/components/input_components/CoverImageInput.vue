@@ -10,11 +10,12 @@
             <div class="mt-auto">
                 <input :id="field.id" type="file" accept="image/*" ref="fileInput" class="hidden" @change="handleFileChange"
                     :required="field.required" />
-               
-                <Button intent="secondary" ring size="sm" @click="openFileInput" aria-label="Seleccionar imagen">{{ props.buttonText }}</Button>
+
+                <Button intent="secondary" ring size="sm" @click="openFileInput" aria-label="Seleccionar imagen">{{
+                    props.buttonText }}</Button>
                 <Button intent="danger" ring size="sm" @click="removeFile" aria-label="eliminar imagen">Eliminar</Button>
-                
-              
+
+
             </div>
         </div>
     </div>

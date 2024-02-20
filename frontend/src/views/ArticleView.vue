@@ -10,7 +10,6 @@ const error = ref(null);
 const route = useRoute();
 const router = useRouter();
 
-let previousId = null;
 
 // Observar los cambios en la ruta y cargar los datos del post
 watch(() => route.params, async (newParams, oldParams) => {
@@ -33,7 +32,6 @@ watch(() => route.params, async (newParams, oldParams) => {
             error.value = err.message || 'Failed to fetch post';
         } finally {
             loading.value = false;
-            previousId = newId;
         }
     } else if (oldParams && newSlug !== post.value.slug) {
         router.replace({ params: { id: newId, slug: post.value.slug } });
@@ -44,10 +42,12 @@ watch(() => route.params, async (newParams, oldParams) => {
 </script>
 
 <template>
-  <div class="mx-auto max-w-3xl pb-8 px-6 lg:px-8">
-    <div v-if="loading">Loading...</div>
-    <div v-else-if="error">{{ error }}</div>
-    <div v-else><Post v-if="post" :post="post" /></div>
-    
-  </div>
+    <div class="mx-auto max-w-3xl pb-8 px-6 lg:px-8">
+        <div v-if="loading">Loading...</div>
+        <div v-else-if="error">{{ error }}</div>
+        <div v-else>
+            <Post v-if="post" :post="post" />
+        </div>
+
+    </div>
 </template>

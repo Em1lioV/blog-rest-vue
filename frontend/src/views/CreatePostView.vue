@@ -50,7 +50,6 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { getAPImultipart } from '@/services/axiosConfig';
 import { Field,Input,TinyEditor,CoverImageInput,Button } from '@/components/input_components';
 import PostService from '@/services/postService';
 import { useForm } from '@/composables';

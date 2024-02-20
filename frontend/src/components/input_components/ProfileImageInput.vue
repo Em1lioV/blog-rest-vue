@@ -5,7 +5,7 @@
                 :class="[field.invalid ? 'ring-1 ring-red-500' : '']" />
         </span>
         <input :id="field.id" type="file" accept="image/*" ref="fileInput" @change="handleFileChange" class="hidden" />
-        <div >
+        <div>
             <Button size="sm" intent="secondary" ring @click="openFileInput">Cambiar</Button>
             <Button size="sm" intent="danger" ring @click="removeFile">Eliminar</Button>
         </div>

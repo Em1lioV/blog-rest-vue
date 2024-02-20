@@ -1,7 +1,7 @@
 <template>
   <div class="relative">
-    <Input v-bind="$attrs" :id="props.id" v-model="searchQuery" :required="required" :invalid="invalid" @keyup.enter="handleSearch"
-      :ariaDescribeBy="ariaDescribeBy" :class="'pr-[40px] peer'" placeholder="buscar"  />
+    <Input v-bind="$attrs" :id="props.id" v-model="searchQuery" :required="required" :invalid="invalid"
+      @keyup.enter="handleSearch" :ariaDescribeBy="ariaDescribeBy" :class="'pr-[40px] peer'" placeholder="buscar" />
     <button type="button" @click="handleSearch"
       class="absolute inset-y-0 right-0 px-2 py-1.5 flex items-center focus:outline-none text-gray-300 peer-focus/:text-blumine-400">
       <MagnifyingGlassIcon class="w-6 h-6 fill-current hover:text-blumine-500" />

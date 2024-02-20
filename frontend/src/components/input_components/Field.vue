@@ -1,5 +1,5 @@
 <template>
-    <div :class="!props.BottomSlot? '': 'mb-1'">
+    <div :class="!props.BottomSlot ? '' : 'mb-1'">
         <div class="flex items-center justify-between">
             <Label v-if="props.label" :for="props.id" :required="props.required">
                 {{ props.label }}
@@ -21,7 +21,7 @@
             </div>
         </div>
         <slot />
-        <div v-if="props.BottomSlot" class="min-h-[20px] mt-1" >
+        <div v-if="props.BottomSlot" class="min-h-[20px] mt-1">
             <ErrorMessage v-if="props.error">
                 {{ props.error }}
             </ErrorMessage>
@@ -34,7 +34,7 @@
 </template>
   
 <script setup>
-import { defineProps, computed, provide } from 'vue';
+import { computed, provide } from 'vue';
 import ErrorMessage from './ErrorMessage.vue';
 import HelperMessage from './HelperMessage.vue';
 import Label from './Label.vue';

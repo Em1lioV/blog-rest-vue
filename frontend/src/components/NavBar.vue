@@ -84,7 +84,7 @@ const logout = () => {
 };
 
 const dropdownOptions = computed(() => {
-  if (!user) return []; 
+  if (!user) return [];
 
   return [
     { label: 'Escribir', to: '/crear-post', className: 'md:hidden px-4 py-2 text-xl text-white bg-blumine-400 hover:!bg-blumine-500' },

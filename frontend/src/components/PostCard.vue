@@ -55,7 +55,7 @@
 
 
 <script setup>
-import { computed, defineProps } from 'vue';
+import { computed } from 'vue';
 import Avatar from './Avatar.vue';
 import DOMPurify from 'dompurify';
 

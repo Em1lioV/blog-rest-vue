@@ -1,10 +1,5 @@
 <template>
-    <editor
-      :id="field.id"
-      :api-key="apiKey"
-      :init="editorOptions"
-      class="w-full"
-    ></editor>
+  <editor :id="field.id" :api-key="apiKey" :init="editorOptions" class="w-full"></editor>
 </template>
 
 <script setup>
@@ -39,12 +34,12 @@ const editorOptions = {
 };
 
 const props = defineProps({
-    required: Boolean,
-    invalid: Boolean,
+  required: Boolean,
+  invalid: Boolean,
 })
 
 
-const emit  = defineEmits(['editor-loaded']);
+const emit = defineEmits(['editor-loaded']);
 
 const field = inject('field', props)
 </script>
