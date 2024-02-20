@@ -31,7 +31,7 @@
           <template v-if="isAuthenticated">
             <!-- Mostrar información del usuario autenticado -->
             <div class="flex row items-center">
-              <div class="hidden md:inline-block">
+              <div class="hidden md:inline-block ml-2">
                 <Button to="/crear-post" :leftICon="PencilSquareIcon()" size="lg">Escribir</Button>
               </div>
 
