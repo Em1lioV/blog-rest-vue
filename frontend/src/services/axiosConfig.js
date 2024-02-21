@@ -18,7 +18,6 @@ const configureAxios = (baseURL, headers) => {
     const requiresAuth = config.requiresAuth || false;
 
     if (!requiresAuth || !store.getters.accessToken) {
-      console.log("No se requiere autenticación o no hay token de acceso.");
       return config;
     }
 
@@ -26,7 +25,6 @@ const configureAxios = (baseURL, headers) => {
     const currentTime = Date.now() / 1000;
 
     if (decodedToken.exp && decodedToken.exp >= currentTime) {
-      console.log("El token de acceso es válido.");
       config.headers.Authorization = `Bearer ${store.getters.accessToken}`;
       return config;
     }
@@ -36,7 +34,6 @@ const configureAxios = (baseURL, headers) => {
       await waitForRefresh();
     }
 
-    console.log("Iniciando la renovación del token de acceso.");
     refreshTokenPromise = refreshTokenPromise || store.dispatch("refreshToken");
 
     try {
@@ -46,15 +43,12 @@ const configureAxios = (baseURL, headers) => {
       ]);
 
       if (!newAccessToken) {
-        console.log("La renovación del token de acceso falló.");
         throw new Error("Token renewal failed");
       }
 
-      console.log("Token de acceso renovado con éxito:", newAccessToken);
       config.headers.Authorization = `Bearer ${newAccessToken}`;
       return config;
     } catch (error) {
-      console.error("Error durante la renovación del token:", error);
       throw error;
     }
   });
@@ -76,10 +70,8 @@ const waitForRefresh = () => {
   return new Promise((resolve, reject) => {
     refreshSubscribers.push((newAccessToken) => {
       if (newAccessToken) {
-        console.log("Token de acceso renovado.");
         resolve();
       } else {
-        console.log("La renovación del token de acceso falló.");
         reject();
       }
     });

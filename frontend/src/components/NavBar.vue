@@ -107,8 +107,6 @@ const fetchUserData = async () => {
     const responseUser = await userService.getUserPartial();
 
     user.value = responseUser;
-
-    console.log(responseUser);
   } catch (error) {
     console.error('Error al obtener datos del usuario:', error);
   }
