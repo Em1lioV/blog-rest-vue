@@ -137,13 +137,13 @@ class UserViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'])
     def partial(self, request):
         user = request.user
-        serializer = UserShortSerializer(user)
+        serializer = UserShortSerializer(user, context={'request': self.request})
         return Response(serializer.data)
 
     @action(detail=False, methods=['get'])
     def logged(self, request):
         user = request.user
-        serializer = UserSerializer(user)
+        serializer = UserSerializer(user, context={'request': self.request})
         return Response(serializer.data)
 
 class RoleListCreateView(ListCreateAPIView):
