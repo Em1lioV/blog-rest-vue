@@ -53,29 +53,35 @@ class PostAuthorSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    role = RoleSerializer()
+    role = RoleSerializer(read_only=True)
+    role_id = serializers.PrimaryKeyRelatedField(queryset=Role.objects.all(), source='role', write_only=True)
     fullname = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ['id', 'firstName', 'lastName', 'initials', 'email', 'profile_image', 'password', 'role', 'fullname']
+        fields = ['id', 'firstName', 'lastName', 'initials', 'email', 'profile_image', 'password', 'role','role_id', 'fullname']
         extra_kwargs = {
             'password': {'write_only': True},
         }
 
     def create(self, validated_data):
+        role_id = validated_data.pop('role_id', None)
         password = validated_data.pop('password', None)
-        instance = self.Meta.model(**validated_data)
-        if password is not None:
-            instance.set_password(password)
+        user = self.Meta.model(**validated_data)
+        if role_id:
+            user.role_id = role_id
+        if password:
+            user.set_password(password)
+            user.save()
         try:
-            instance.save()
+            user.save()
         except IntegrityError:
             raise serializers.ValidationError({'email': ['El usuario con este correo electrónico ya existe.']})
-        return instance
+        return user
 
     def get_fullname(self, obj):
         return obj.fullname
     
+
 
 
