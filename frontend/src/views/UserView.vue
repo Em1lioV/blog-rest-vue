@@ -9,7 +9,7 @@
     </header>
     <hr class="w-full max-w-3xl border my-4 border-blumine-200">
     <div v-if="posts" class="w-full grid gap-y-4 place-items-center">
-      <PostCardVue v-for="post in posts" :key="post.id" :post="post" :showAuthorInfo="false" />
+      <PostCard v-for="post in posts" :key="post.id" :post="post" :showAuthorInfo="false" />
     </div>
 
   </section>
@@ -18,7 +18,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { userService, PostService } from '@/services';
-import { PostCardVue,Avatar } from '@/components';
+import { PostCard,Avatar } from '@/components';
 import { useRoute } from 'vue-router';
 
 const route = useRoute()
