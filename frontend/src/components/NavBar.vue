@@ -1,8 +1,7 @@
 <template>
   <header class="shadow-md">
     <!-- Barra de búsqueda con colores invertidos -->
-    <nav class="bg-white text-gray-800 py-8">
-      <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 flex row justify-between items-center">
+      <nav class="bg-white text-gray-800 py-8 mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 flex row justify-between items-center">
         <div class="flex h-16 items-center justify-between">
           <!-- Logo y barra de búsqueda -->
           <div class="flex items-center justify-center">
@@ -62,8 +61,7 @@
             </Dropdown>
           </template>
         </div>
-      </div>
-    </nav>
+      </nav>
   </header>
 </template>
 

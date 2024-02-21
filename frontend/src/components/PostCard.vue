@@ -5,7 +5,7 @@
       <div class="flex items-center text-xs" v-if="post.author">
         <router-link :to="'/profile/' + post.author.id" class="none">
           <div class="text-start relative flex items-center gap-x-2">
-            <Avatar :src="post.author.profile_image" :name="post.author.fullname" :initials="post.author.initials" />
+            <Avatar responsive :src="post.author.profile_image" :name="post.author.fullname" :initials="post.author.initials" />
             <div class="text-sm leading-1">
               <p class="font-semibold text-gray-900 p-0">{{ post.author.fullname }}</p>
               <p class="text-gray-600 hidden sm:inline-block p-0 m-0" v-if="post.author.role">{{

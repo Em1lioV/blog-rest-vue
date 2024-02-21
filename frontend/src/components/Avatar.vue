@@ -24,6 +24,10 @@ const props = defineProps({
     validator: (value) => ["circle", "square"].includes(value),
     default: "circle",
   },
+  responsive: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const verifiedSrc = ref(null);
@@ -58,10 +62,10 @@ const ContainerClass = computed(() => {
     {
       variants: {
         size: {
-          sm: "text-xs  h-8 w-8",
-          base: "text-xl  h-12 w-12",
-          md: "text-2xl  h-16 w-16",
-          lg: "text-5xl  h-28 w-28",
+          sm: "text-xs h-8 w-8",
+          base: props.responsive ? "text-lg md:text-xl h-10 w-10 md:h-12 md:w-12 " : "text-xl h-12 w-12",
+          md: props.responsive ? "text-xl md:text-2xl h-14 w-14 md:h-16 md:w-16" : "text-2xl h-16 w-16",
+          lg: props.responsive ? "text-4xl md:text-5xl h-24 w-24 md:h-28 md:w-28" : "text-5xl h-28 w-28",
         },
         shape: {
           circle: "rounded-full",
