@@ -32,7 +32,7 @@
             </div>
             <div class="sm:col-span-4">
               <Field id="ocupacion" label="Ocupacion">
-                <Combobox :load-options="loadRoles" v-model="form.fields.role" :create-option="createRole" />
+                <Combobox :load-options="loadRoles" v-model="form.fields.role_id" :create-option="createRole" />
               </Field>
             </div>
 
@@ -55,11 +55,11 @@
 
 <script setup>
 import { PhotoIcon, UserCircleIcon } from '@heroicons/vue/24/solid'
-import {  watch } from 'vue';
+import { watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { Field, Input, PasswordInput, Button, ProfileImageInput, Combobox } from '@/components/input_components';
-import useForm from '@/composables/useForm';
-import { userService } from '@/services';
+import { useForm } from '@/composables';
+import { userService, roleService } from '@/services';
 
 const router = useRouter();
 
@@ -69,56 +69,43 @@ const form = useForm({
   initials: '',
   email: '',
   password: '',
-  role: 0,
+  role_id: 0,
   profile_image: null
 });
 
+async function loadRoles(query, setOptions) {
+  try {
+    const response = await roleService.listRolesByQuery(query);
+    const results = response.data;
+    const options = results.map(role => ({
+      value: role.id,
+      label: role.description
+    }));
+    setOptions(options);
+  } catch (error) {
 
-function loadRoles(query, setOptions) {
-  fetch("http://localhost:8000/roles/?description=" + query)
-    .then(response => response.json())
-    .then(results => {
-      setOptions(
-        results.map(role => {
-          return {
-            value: role.id, 
-            label: role.description 
-          }
-        })
-      );
-    });
+  }
 }
 
-
-
-
-function createRole(option, setSelected) {
-  fetch("http://localhost:8000/addRole/", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      description: option.label, // Envía la descripción del nuevo rol al backend
-    }),
-  })
-    .then(response => response.json())
-    .then(role => {
-      setSelected({
-        value: role.id,
-        label: role.description
-      });
+async function createRole(option, setSelected) {
+  try {
+    const response = await roleService.createRole(option.label);
+    const role = response.data;
+    setSelected({
+      value: role.id,
+      label: role.description
     });
-}
+  } catch (error) {
 
+  }
+}
 
 async function handleSubmit() {
   await form.submit(async fields => {
     await userService.createUser(fields);
-    await router.push("/login"); 
+    await router.push("/login");
   });
 }
-
 
 watch(() => [form.fields.firstName, form.fields.lastName], ([newFirstName, newLastName]) => {
   const newFirstInitial = newFirstName ? newFirstName.charAt(0).toUpperCase() : '';
