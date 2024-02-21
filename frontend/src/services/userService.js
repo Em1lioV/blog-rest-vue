@@ -12,7 +12,7 @@ const userService = {
       const response = await getAPI.get(`/users/${userId}/`);
       return response.data;
     } catch (error) {
-      throw new Error("Error getting user by ID: " + error.message);
+      throw error;
     }
   },
 
@@ -21,7 +21,7 @@ const userService = {
       const response = await getAPI.get('/users/logged/', { requiresAuth: true });
       return response.data;
     } catch (error) {
-      throw new Error("Error getting user by ID: " + error.message);
+      throw error;
     }
   },
 
@@ -30,7 +30,7 @@ const userService = {
       const response = await getAPI.get('/users/partial/', { requiresAuth: true });
       return response.data;
     } catch (error) {
-      return error;
+      throw error;
     }
   },
 
@@ -40,7 +40,7 @@ const userService = {
       const response = await getAPI.put(`/users/${userId}`, updatedUserData);
       return response.data;
     } catch (error) {
-      throw new Error("Error updating user: " + error.message);
+      throw error;
     }
   },
 
@@ -50,7 +50,7 @@ const userService = {
       const response = await getAPI.delete(`/users/${userId}`);
       return response.data;
     } catch (error) {
-      throw new Error("Error deleting user: " + error.message);
+      throw error;
     }
   },
 };
