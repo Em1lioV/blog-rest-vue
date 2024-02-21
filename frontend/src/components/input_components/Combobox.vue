@@ -2,10 +2,10 @@
   <Combobox by="value" :model-value="selectedValue" @update:model-value="handleUpdateModelValue">
     <div class="relative mt-1 z-5">
       <ComboboxInput :required="field.required"
-        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blumine-400 sm:text-sm sm:leading-6"
+        class="block w-full rounded-md border-0 py-1.5 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blumine-400 sm:text-sm sm:leading-6"
         :displayValue="(option) => option.label" @change="query = $event.target.value" />
-      <ComboboxButton class="absolute inset-y-0 right-0 flex items-center pr-2">
-        <ChevronUpDownIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
+      <ComboboxButton class="absolute inset-y-0 right-0 flex items-center pr-2 ">
+        <ChevronUpDownIcon class="h-5 w-5 text-gray-400 hover:text-blumine-500 fill-current" aria-hidden="true" />
       </ComboboxButton>
 
       <TransitionRoot leave="transition ease-in duration-100" leaveFrom="opacity-100" leaveTo="opacity-0"
@@ -26,7 +26,7 @@
                 'bg-blumine-500 text-white': active,
                 'text-gray-900': !active,
               }">
-                Crear "{{ queryOption.label }}"
+                Crear "{{ queryOption.label.trim() }}"
               </li>
             </ComboboxOption>
             <ComboboxOption v-for="option in filteredOptions" as="template" :key="option.value" :value="option"
@@ -89,7 +89,9 @@ const queryOption = computed(() => {
 });
 
 const shouldShowCreateOption = computed(() => {
-  return queryOption.value && !filteredOptions.value.some(option => option.label === queryOption.value.label);
+  return queryOption.value && 
+    queryOption.value.label.trim() !== '' && 
+    !filteredOptions.value.some(option => option.label.trim() === queryOption.value.label.trim());
 });
 
 const filteredOptions = computed(() => {
@@ -103,7 +105,6 @@ const filteredOptions = computed(() => {
   }
 });
 
-// Utiliza useThrottle para throttle la función loadOptions
 const throttledLoadOptions = useThrottle((q) => {
   props.loadOptions(q, (results) => {
     options.value = results;
@@ -130,15 +131,13 @@ watch(
   { immediate: true }
 );
 
-
 function handleUpdateModelValue(selected) {
-
   if (props.createOption && selected?.missing) {
     isLoading.value = true;
     props.createOption(selected, option => {
       const valueToSendOption = useModelValueValidator(option, props.modelValue);
       selectedValue.value = option;
-      emit('update:modelValue', valueToSendOption); // Emitir la opción creada al componente padre
+      emit('update:modelValue', valueToSendOption);
       isLoading.value = false;
     });
   } else {
@@ -152,20 +151,16 @@ function useModelValueValidator(selected, modelValue) {
   let valueToSend;
 
   if (typeof modelValue === 'object' && Object.keys(modelValue).length === 0) {
-    // Si modelValue es un objeto vacío, envía el objeto completo seleccionado
     valueToSend = selected;
   } else if (typeof modelValue === 'number') {
-    // Si modelValue es un número, envía el valor seleccionado
     valueToSend = selected.value;
   } else if (typeof modelValue === 'object' && Object.keys(modelValue).length === 2) {
-    // Si modelValue es un objeto con dos propiedades, asigna los valores correctamente
     const [valueProp, labelProp] = Object.keys(modelValue);
     valueToSend = {
       [valueProp]: selected.value,
       [labelProp]: selected.label
     };
   } else {
-    // En otros casos, utiliza el valor tal como está
     valueToSend = modelValue !== undefined ? modelValue : null;
   }
 
