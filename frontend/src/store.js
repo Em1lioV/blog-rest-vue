@@ -1,5 +1,5 @@
 import { createStore } from "vuex";
-import { getAPI } from "@/services/axiosConfig";
+import { axios } from "@/services";
 import Cookies from "js-cookie";
 import router from "./router";
 
@@ -28,7 +28,7 @@ export default createStore({
   actions: {
     async refreshToken({ commit, dispatch }) {
       try {
-        const newAccessToken = await getAPI.post("/token/refresh/");
+        const newAccessToken = await axios.post("/token/refresh/");
         const access = newAccessToken.data.access;
         commit("updateStorage", { access });
         return access;
@@ -44,7 +44,7 @@ export default createStore({
 
     async userLogin({ commit, dispatch }, userCredentials) {
       try {
-        const response = await getAPI.post("token/", {
+        const response = await axios.post("token/", {
           email: userCredentials.email,
           password: userCredentials.password,
         });
@@ -61,7 +61,7 @@ export default createStore({
     async userLogout({ commit, state }) {
       try {
         if (state.access_token) {
-          await getAPI.post("/logout/");
+          await axios.post("/logout/");
           commit("clearStorage");
           router.push("/login");
         }
