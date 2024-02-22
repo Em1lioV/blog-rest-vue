@@ -13,7 +13,6 @@
 import { ref, onMounted, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import Input from './Input.vue';
-
 import { MagnifyingGlassIcon } from '@heroicons/vue/24/solid';
 
 const props = defineProps({

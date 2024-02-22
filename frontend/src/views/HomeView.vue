@@ -11,7 +11,7 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { getAPI } from "@/services/axiosConfig";
+import { axios } from "@/services";
 import PostList from "@/components/PostList.vue";
 
 const posts = ref(null);
@@ -20,9 +20,9 @@ const postsLoading = ref(true);
 onMounted(async () => {
   try {
     const url = 'posts/';
-    const response = await getAPI.get(url);
+    const response = await axios.get(url);
     posts.value = response.data;
-    console.log(response.data);
+
   } catch (error) {
     console.error("Error al obtener los datos:", error);
   } finally {

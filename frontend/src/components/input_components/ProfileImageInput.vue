@@ -14,7 +14,6 @@
     
 <script setup>
 import { inject } from 'vue';
-
 import useFileInput from '@/composables/useFileInput';
 import Avatar from '../Avatar.vue';
 import Button from './Button.vue';

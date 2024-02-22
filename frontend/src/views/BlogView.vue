@@ -13,7 +13,7 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { getAPI } from '@/services/axiosConfig';
+import { axios } from '@/services';
 import { PhotoIcon, UserCircleIcon } from '@heroicons/vue/24/solid'
 import PostList from "@/components/PostList.vue";
 
@@ -23,9 +23,8 @@ const postsLoading = ref(true);
 onMounted(async () => {
   try {
     const url = 'posts/';
-    const response = await getAPI.get(url);
+    const response = await axios.get(url);
     posts.value = response.data;
-    console.log(posts.value);
   } catch (error) {
     console.error("Error al obtener los datos:", error);
   } finally {

@@ -1,12 +1,13 @@
-import { getAPI,getAPImultipart} from './axiosConfig';
+import { axios,axiosMultipart} from './axiosConfig';
 import userService from './userService';
 import PostService from './postService';
-
+import roleService from './roleService';
 
 
 export {
-    getAPI,
-    getAPImultipart,
+    axios,
+    axiosMultipart,
     userService,
-    PostService
+    PostService,
+    roleService
 };

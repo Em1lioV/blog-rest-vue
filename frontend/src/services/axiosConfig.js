@@ -1,4 +1,4 @@
-import axios from "axios";
+import axiosInstance  from "axios";
 import store from "@/store";
 import { jwtDecode } from "jwt-decode";
 import { getValidationError, sweetAlert } from "@/util";
@@ -8,7 +8,7 @@ let refreshSubscribers = [];
 let refreshTokenPromise = null;
 
 const configureAxios = (baseURL, headers) => {
-  const instance = axios.create({
+  const instance = axiosInstance.create({
     baseURL,
     headers,
     withCredentials: true,
@@ -78,10 +78,10 @@ const waitForRefresh = () => {
   });
 };
 
-export const getAPI = configureAxios("/api", {
+export const axios = configureAxios("/api", {
   "Content-Type": "application/json",
 });
 
-export const getAPImultipart = configureAxios("/api", {
+export const axiosMultipart = configureAxios("/api", {
   "Content-Type": "multipart/form-data",
 });
