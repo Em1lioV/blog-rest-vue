@@ -1,21 +1,21 @@
 <template>
   <article
     :class="['max-w-3xl w-full flex flex-row items-start justify-between border border-gray-200 rounded-lg shadow overflow-hidden', post.author ? ' h-[200px] sm:h-[225px] md:h-[250px]' : ' h-[125px] sm:h-[150px] md:h-[175px]']">
-    <div :class="['w-full h-full p-4 flex flex-col', post.author ? 'justify-between' : '']">
-      <div class="flex items-center text-xs" v-if="post.author">
+    <div class="w-full h-full p-4 flex flex-col justify-between">
+      <div class="flex items-center text-xs mb-3" v-if="post.author">
         <router-link :to="'/profile/' + post.author.id" class="none">
           <div class="text-start relative flex items-center gap-x-2">
             <Avatar responsive :src="post.author.profile_image" :name="post.author.fullname" :initials="post.author.initials" />
             <div class="text-sm leading-1">
-              <p class="font-semibold text-gray-900 p-0">{{ post.author.fullname }}</p>
-              <p class="text-gray-600 hidden sm:inline-block p-0 m-0" v-if="post.author.role">{{
-                post.author.role.description }}
-              </p>
+              <h2 class="font-semibold text-gray-900">{{ post.author.fullname }}</h2>
+              <h3 class="text-gray-600 hidden sm:inline-block p-0 m-0" v-if="post.author.role">
+                {{ post.author.role.description }}
+              </h3>
             </div>
           </div>
         </router-link>
       </div>
-      <div class="group relative flex flex-col justify-center flex-grow">
+      <div class="group relative flex flex-col h-full">
         <router-link :to="'/posts/' + post.slug + '-' + post.id">
           <h2
             class="mt-1 text-base md:text-lg text-start font-semibold leading-5 text-gray-900 group-hover:text-gray-600 !line-clamp-3  sm:!line-clamp-2">
@@ -25,7 +25,7 @@
           </p>
         </router-link>
       </div>
-      <div class="mt-auto">
+      <div >
         <div v-if="post.category">
           <router-link :to="'/tag/' + post.category"
             class="relative z-10 rounded-full bg-gray-50 px-3 py-1.5 font-medium text-gray-600 hover:bg-gray-100">
