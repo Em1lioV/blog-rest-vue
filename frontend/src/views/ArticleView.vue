@@ -1,3 +1,14 @@
+<template>
+    <div class="mx-auto max-w-3xl pb-8 px-6 lg:px-8">
+        <div v-if="loading">Loading...</div>
+        <div v-else-if="error">{{ error }}</div>
+        <div v-else>
+            <Post v-if="post" :post="post" />
+        </div>
+
+    </div>
+</template>
+
 <script setup>
 import { ref, watch } from 'vue';
 import { PostService } from '@/services';
@@ -10,8 +21,6 @@ const error = ref(null);
 const route = useRoute();
 const router = useRouter();
 
-
-// Observar los cambios en la ruta y cargar los datos del post
 watch(() => route.params, async (newParams, oldParams) => {
     const { id: newId, slug: newSlug } = newParams;
     const { id: oldId } = oldParams || {};
@@ -38,16 +47,4 @@ watch(() => route.params, async (newParams, oldParams) => {
     }
 }, { immediate: true });
 
-
 </script>
-
-<template>
-    <div class="mx-auto max-w-3xl pb-8 px-6 lg:px-8">
-        <div v-if="loading">Loading...</div>
-        <div v-else-if="error">{{ error }}</div>
-        <div v-else>
-            <Post v-if="post" :post="post" />
-        </div>
-
-    </div>
-</template>
