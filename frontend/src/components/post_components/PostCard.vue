@@ -49,7 +49,7 @@
 
 <script setup>
 import { computed } from 'vue';
-import Avatar from './Avatar.vue';
+import { Avatar } from '../';
 import DOMPurify from 'dompurify';
 
 const props = defineProps({

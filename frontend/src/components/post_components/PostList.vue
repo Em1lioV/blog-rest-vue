@@ -6,7 +6,7 @@
 </template>
   
 <script setup>
-import PostCard from '@/components/PostCard.vue';
+import PostCard from './PostCard.vue';
 
 const props = defineProps(['posts']);
 </script>
