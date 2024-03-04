@@ -12,7 +12,7 @@
 <script setup>
 import { ref, watch } from 'vue';
 import { PostService } from '@/services';
-import Post from '@/components/Post.vue';
+import { Post } from '@/components/post_components';
 import { useRoute, useRouter } from 'vue-router';
 
 const loading = ref(false);

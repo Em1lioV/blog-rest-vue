@@ -35,8 +35,8 @@
   import { axios } from '@/services';
   import { UserCircleIcon } from '@heroicons/vue/24/solid'
   import { useRoute } from 'vue-router';
-  import SearchBar from "@/components/input_components/SearchBar.vue";
-  import PostList from "@/components/PostList.vue";
+  import { SearchBar } from "@/components/input_components";
+  import { PostList } from "@/components/post_components";
   
   const searchQuery = ref('');
   const posts = ref(null);

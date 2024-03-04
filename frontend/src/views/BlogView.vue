@@ -15,7 +15,7 @@
 import { ref, onMounted } from "vue";
 import { axios } from '@/services';
 import { PhotoIcon, UserCircleIcon } from '@heroicons/vue/24/solid'
-import PostList from "@/components/PostList.vue";
+import { PostList } from "@/components/post_components";
 
 const posts = ref(null);
 const postsLoading = ref(true);

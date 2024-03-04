@@ -18,7 +18,8 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { userService, PostService } from '@/services';
-import { PostCard,Avatar } from '@/components';
+import { Avatar } from '@/components';
+import { PostCard } from '@/components/post_components';
 import { useRoute } from 'vue-router';
 
 const route = useRoute()
