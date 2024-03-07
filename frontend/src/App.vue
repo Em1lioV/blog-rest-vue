@@ -25,10 +25,8 @@ const showNavBar = computed(() => {
   }
 }
 
-html {
+html, body{
   scroll-behavior: smooth;
 }
-html:focus-within {
-  scroll-behavior: smooth;
-}
+
 </style>
