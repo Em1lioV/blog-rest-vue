@@ -5,12 +5,11 @@ from rest_framework.generics import ListAPIView,ListCreateAPIView
 from rest_framework.response import Response
 from rest_framework.decorators import action
 
-
 from rest_framework_simplejwt.views import TokenObtainPairView,TokenRefreshView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
 
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated,IsAdminUser
 
 from rest_framework import filters
 
@@ -86,7 +85,7 @@ class PostViewSet(viewsets.ModelViewSet):
         return queryset
 
     def get_serializer_class(self):
-        if self.action in ['list','retrieve']:
+        if self.action in ['list']:
             return PostAuthorSerializer  # Reemplaza ListPostSerializer con tu propio serializer
         return PostSerializer  # Reemplaza PostSerializer con tu propio serializer
 
@@ -145,6 +144,20 @@ class UserViewSet(viewsets.ModelViewSet):
         user = request.user
         serializer = UserSerializer(user, context={'request': self.request})
         return Response(serializer.data)
+    
+class TagViewSet(viewsets.ModelViewSet):
+    queryset = Tag.objects.all()
+
+    def get_serializer_class(self):
+        if self.action == 'retrieve':
+            return TagDetailSerializer  # Utiliza TagDetailSerializer para obtener detalles de etiquetas en la acción retrieve
+        return TagSerializer  # Usa TagSerializer para otras acciones
+
+    def get_permissions(self):
+        if self.action == 'destroy':
+            return [IsAdminUser()]  # Requiere que el usuario sea superusuario para eliminar etiquetas
+        return super().get_permissions()
+        
 
 class RoleListCreateView(ListCreateAPIView):
     queryset = Role.objects.all()

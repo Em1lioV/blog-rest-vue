@@ -8,6 +8,7 @@ app_name = "blog"
 router = DefaultRouter()
 router.register(r'posts', PostViewSet, basename='post')
 router.register(r'users', UserViewSet, basename='user')
+router.register(r'tags', TagViewSet,basename='tag')
 
 urlpatterns = [
     path('token/', CookieTokenObtainPairView.as_view(), name='token-obtain'),
