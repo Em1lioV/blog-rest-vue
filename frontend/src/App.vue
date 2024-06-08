@@ -1,8 +1,8 @@
 <template>
   <div>
-    <NavBar v-if="showNavBar" class="top-level-container"/>
-    <main class="top-level-container">
-      <router-view />
+    <NavBar v-if="showNavBar" />
+    <main >
+      <router-view /> 
     </main>
   </div>
 </template>
@@ -19,12 +19,10 @@ const showNavBar = computed(() => {
 });
 </script>
 <style>
-@media (min-width: 1024px ) {
-  .top-level-container {
-    padding-left: calc(100vw - 100%);
-  }
-}
 
+html{
+  overflow-y: scroll;
+}
 html, body{
   scroll-behavior: smooth;
 }

@@ -7,9 +7,14 @@ import ProfileImageInput from './ProfileImageInput.vue'
 import PasswordInput from './PasswordInput.vue'
 import Button from './Button.vue'
 import Combobox from './Combobox.vue';
-
+import ComboboxMultiple from './TagInput.vue';
+import FollowButton from './FollowButton.vue';
+import BookmarkButton from './BookmarkButton.vue';
+import BoostButton from './BoostButton.vue'
 
 export {
+  BookmarkButton,
+  BoostButton,
   Field,
   Input,
   TinyEditor,
@@ -18,5 +23,7 @@ export {
   PasswordInput,
   Button,
   ProfileImageInput,
-  Combobox
+  Combobox,
+  ComboboxMultiple,
+  FollowButton,
 };

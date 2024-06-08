@@ -32,7 +32,7 @@
             </div>
             <div class="sm:col-span-4">
               <Field id="ocupacion" label="Ocupacion">
-                <Combobox :load-options="loadRoles" v-model="form.fields.role_id" :create-option="createRole" />
+                <Combobox v-model="form.fields.role_id" :load-options="loadRoles" :create-option="createRole" />
               </Field>
             </div>
 
@@ -55,7 +55,7 @@
 
 <script setup>
 import { PhotoIcon, UserCircleIcon } from '@heroicons/vue/24/solid'
-import { watch } from 'vue';
+import { computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { Field, Input, PasswordInput, Button, ProfileImageInput, Combobox } from '@/components/input_components';
 import { useForm } from '@/composables';
@@ -66,11 +66,15 @@ const router = useRouter();
 const form = useForm({
   firstName: '',
   lastName: '',
-  initials: '',
   email: '',
   password: '',
   role_id: 0,
-  profile_image: null
+  profile_image: null,
+  initials: computed(() => {
+    const firstInitial = form.fields.firstName ? form.fields.firstName.charAt(0).toUpperCase() : '';
+    const lastInitial = form.fields.lastName ? form.fields.lastName.charAt(0).toUpperCase() : '';
+    return firstInitial + lastInitial;
+  }),
 });
 
 async function loadRoles(query, setOptions) {
@@ -106,16 +110,6 @@ async function handleSubmit() {
     await router.push("/login");
   });
 }
-
-watch(() => [form.fields.firstName, form.fields.lastName], ([newFirstName, newLastName]) => {
-  const newFirstInitial = newFirstName ? newFirstName.charAt(0).toUpperCase() : '';
-  const newLastInitial = newLastName ? newLastName.charAt(0).toUpperCase() : '';
-  const newInitials = `${newFirstInitial}${newLastInitial}`;
-
-  if (newInitials !== form.fields.initials) {
-    form.fields.initials = newInitials;
-  }
-}, { deep: true });
 
 
 function volver() {

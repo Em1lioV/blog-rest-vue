@@ -7,7 +7,15 @@ const PostService = {
 
   async getPostById(PostId) {
     try {
-      const response = await axios.get(`/posts/${PostId}/`);
+      const response = await axios.get(`/posts/${PostId}/`,{requiresAuth:true});
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  async getPosts(query) {
+    try {
+      const response = await axios.get(`/posts/${query}`,{ requiresAuth: true });
       return response.data;
     } catch (error) {
       throw error;
@@ -15,7 +23,7 @@ const PostService = {
   },
   async getPostsUserByRequest() {
     try {
-      const response = await axios.get('/users/posts/', { requiresAuth: true });
+      const response = await axios.get('/user/posts/', { requiresAuth: true });
       return response.data;
     } catch (error) {
       throw error;
@@ -24,7 +32,15 @@ const PostService = {
   
   async getPostsUserById(UserId) {
     try {
-      const response = await axios.get(`/users/posts/${UserId}/`);
+      const response = await axios.get(`/user/posts/${UserId}/`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  async searchPosts(query) {
+    try {
+      const response = await axios.get(`posts/?search=${query}`);
       return response.data;
     } catch (error) {
       throw error;
@@ -48,6 +64,26 @@ const PostService = {
       throw new Error("Error deleting Post: " + error.message);
     }
   },
+
+  async toggleBoost(postId) {
+    try {
+      const response = await axios.post(`/posts/${postId}/boost/`,null, { requiresAuth: true });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  async toggleBookmark(postId) {
+    try {
+      const response = await axios.post(`/posts/${postId}/bookmark/`,null, { requiresAuth: true });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  
 };
+
+
 
 export default PostService;

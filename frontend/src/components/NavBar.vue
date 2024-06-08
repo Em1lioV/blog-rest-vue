@@ -1,18 +1,17 @@
 <template>
   <header class="shadow-md">
     <nav
-      class="bg-white text-gray-800 py-8 px-4 mx-auto lg:max-w-4xl xl:max-w-6xl flex row justify-between items-center">
+      class="bg-white text-gray-800 py-4 md:py-8 px-4 mx-auto lg:max-w-6xl flex row justify-between items-center">
       <div class="flex h-16 items-center justify-between">
 
         <div class="flex items-center justify-center">
-          <router-link to="/" class="flex items-center justify-center mx-auto">
-
-            <img class="h-[80px] w-auto mx-4" src="../assets/logo.png" alt="Tu Compañía" />
+          <router-link to="/" class="flex items-center justify-center mr-5">
+            <img class="h-auto w-24 md:w-32" src="../assets/logo.svg" alt="Tu Compañía" />
           </router-link>
 
           <div class="hidden md:flex max-w-md mx-auto items-center">
             <Field id="search" :BottomSlot="false">
-              <SearchBar />
+              <SearchBar  parentSearchPage="search"/>
             </Field>
           </div>
         </div>

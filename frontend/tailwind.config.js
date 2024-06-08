@@ -315,6 +315,7 @@ module.exports = {
       DEFAULT: '1',
     },
     fontFamily: {
+      LeagueSpartan: ["LeagueSpartan", "sans-serif"],
       sans: ['Inter var',
         'ui-sans-serif',
         'system-ui',
@@ -1005,6 +1006,6 @@ module.exports = {
       50: '50',
     },
   },
-  plugins: [require('@tailwindcss/forms'),],
+  plugins: [require('@tailwindcss/forms'),require('@tailwindcss/typography'),],
 }
 

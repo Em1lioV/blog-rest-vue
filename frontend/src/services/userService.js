@@ -9,7 +9,7 @@ const userService = {
   // Función para obtener la información de un usuario por su ID
   async getUserById(userId) {
     try {
-      const response = await axios.get(`/users/${userId}/`);
+      const response = await axios.get(`/users/${userId}/`,{ requiresAuth: true });
       return response.data;
     } catch (error) {
       throw error;
@@ -33,6 +33,14 @@ const userService = {
       throw error;
     }
   },
+  async searchUsers(query) {
+    try {
+      const response = await axios.get(`users/?search=${query}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
 
   // Función para actualizar la información de un usuario
   async updateUser(userId, updatedUserData) {
@@ -48,6 +56,14 @@ const userService = {
   async deleteUser(userId) {
     try {
       const response = await axios.delete(`/users/${userId}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  async togglefollowUser(userId) {
+    try {
+      const response = await axios.post(`/users/${userId}/toggle_follow/`, null,{ requiresAuth: true });
       return response.data;
     } catch (error) {
       throw error;

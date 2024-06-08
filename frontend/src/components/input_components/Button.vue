@@ -8,7 +8,7 @@
       </path>
     </svg>
     <component :is="props.leftICon" :class="['w-5 h-5 mr-2', props.loading ? 'invisible' : '']" />
-    <span :class="[props.loading ? 'invisible' : '', 'text-center']">
+    <span :class="[props.loading ? 'invisible' : '', props.spanClass ? props.spanClass :'text-center text-nowrap' ]">
       <slot />
     </span>
 
@@ -16,18 +16,19 @@
   </component>
 </template>
   
-<script setup>
+<script setup> 
 import { cva } from 'class-variance-authority';
 import { computed } from 'vue';
 
 const props = defineProps({
+  spanClass: String,
   leftICon: Object,
   rightICon: Object,
   loading: Boolean,
   disabled: Boolean,
   ring: Boolean,
   block: Boolean,
-  to: String,
+  to: [String,Object],
   intent: {
     type: String,
     validator: val => ["primary", "secondary", "danger", "ghost", "link"].includes(val),
@@ -51,7 +52,7 @@ const elementType = computed(() => {
 
 // Clases base del botón sin estilos de hover
 const baseButtonClass = cva(
-  "inline-flex items-center justify-center font-semibold rounded mr-2 py-0.5 ",
+  "inline-flex self-start items-center justify-center font-semibold rounded-full mr-2 py-0.5 ",
   {
     variants: {
       intent: {
@@ -65,11 +66,11 @@ const baseButtonClass = cva(
         true: 'cursor-not-allowed opacity-60'
       },
       size: {
-        xm: 'text-xs px-2 min-h-[20px] min-w-[36px]',
-        sm: 'text-sm px-3 min-h-[28px] min-w-[50px]',
-        md: 'text-md px-4 min-h-[36px] min-w-[64px]',
-        lg: 'text-lg px-5 min-h-[44px] min-w-[78px]',
-        xl: 'text-xl px-6 min-h-[52px] min-w-[92px]',
+        xm: 'text-xs px-3 min-h-[20px] min-w-[36px]',
+        sm: 'text-sm px-4 min-h-[28px] min-w-[50px]',
+        md: 'text-md px-5 min-h-[36px] min-w-[64px]',
+        lg: 'text-lg px-6 min-h-[44px] min-w-[78px]',
+        xl: 'text-xl px-7 min-h-[52px] min-w-[92px]',
       },
       block: {
         true: 'w-full',

@@ -1,12 +1,11 @@
 <template>
-    <div class="mx-auto max-w-3xl pb-8 px-6 lg:px-8">
+    <section class="mx-auto max-w-[700px] my-8">
         <div v-if="loading">Loading...</div>
         <div v-else-if="error">{{ error }}</div>
         <div v-else>
-            <Post v-if="post" :post="post" />
+            <Post v-if="post"  :post="post" />
         </div>
-
-    </div>
+    </section>
 </template>
 
 <script setup>

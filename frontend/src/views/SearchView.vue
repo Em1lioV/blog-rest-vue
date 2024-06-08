@@ -1,86 +1,63 @@
 <template>
-    <div class="py-8 sm:py-11">
-      <div class="mx-auto max-w-2xl md:mx-0 lg:max-w-none px-6 lg:px-8">
-        <div class="md:hidden">
-          <SearchBar />
-        </div>
+  <div class="mx-auto max-w-3xl mt-6 pb-8 px-6 lg:px-8 flex flex-col justify-center items-center">
+    <div class="flex flex-col w-full">
+      <div class="md:hidden mx-6">
+        <SearchBar :searchPage="computedsearchpage" />
       </div>
-      <div class="mx-auto mt-5 md:mt-0 max-w-7xl px-6 lg:px-8">
-        <div v-if="postsLoading" class="w-full grid place-items-center">
-          <p>Cargando...</p>
-        </div>
-        <div v-else>
-          <div v-show="searchQuery" class="text-2xl md:text-4xl font-bold">
-            <h2 class="text-gray-600 overflow-ellipsis whitespace-nowrap overflow-hidden">
-              Resultados para
-              <span class="text-blumine-500 ">{{ searchQuery }}</span>
-            </h2>
-          </div>
-          <div v-if="posts && posts.length > 0">
-            <PostList :posts="posts" />
-          </div>
-          <div v-else class="pt-10">
-            <p class="text-gray-600 text-lg md:text-xl">
-              No se encontraron resultados. Por favor, verifica la ortografía,
-              prueba con diferentes palabras clave o utiliza palabras clave más generales.
-            </p>
-          </div>
-        </div>
+      <div v-show="searchQuery" class="text-2xl md:text-4xl font-bold pt-2 md:pt-5 mx-6 md:mx-0 mt-4 md:mt-0">
+        <h2 class="text-gray-600 overflow-ellipsis whitespace-nowrap overflow-hidden">
+          Resultados para
+          <span aria-label="none" class="text-blumine-500 ">{{ searchQuery }}</span>
+        </h2>
+      </div>
+
+      <div v-if="searchQuery" class="mx-6 md:mx-0 mt-4 md:mt-2">
+        <RouterTabs :tabs="computedTabs" />
+      </div>
+      <section v-if="searchQuery" class="mx-6 md:mx-0 mt-8">
+        <router-view v-slot="{ Component }">
+          <keep-alive>
+            <component :is="Component" />
+          </keep-alive>
+        </router-view>
+      </section>
+
+      <div v-else class="mx-6 md:mx-0 mt-8">
+        <h1 class="text-4xl font-bold">Búsquedas recientes</h1>
+        <p class="text-md mt-2">No tienes búsquedas recientes</p>
       </div>
     </div>
-  </template>
-  
-  <script setup>
-  import { ref, onMounted, watch, onActivated } from "vue";
-  import { axios } from '@/services';
-  import { UserCircleIcon } from '@heroicons/vue/24/solid'
-  import { useRoute } from 'vue-router';
-  import { SearchBar } from "@/components/input_components";
-  import { PostList } from "@/components/post_components";
-  
-  const searchQuery = ref('');
-  const posts = ref(null);
-  const postsLoading = ref(true);
-  const route = useRoute();
-  
-  const performSearch = async () => {
-    try {
-      postsLoading.value = true;
-  
-      // Only perform the search if there is a valid query
-      if (searchQuery.value.trim() !== '') {
-        const url = `posts/?search=${searchQuery.value}`;
-        const response = await axios.get(url);
-  
-        // Update the state of posts with the search results
-        posts.value = response.data;
-      } else {
-        // If there's no valid query, reset the posts to null or an empty array
-        posts.value = null;
-      }
-    } catch (error) {
-      console.error("Error al realizar la búsqueda:", error);
-      // Handle the error, for example, show an error message
-    } finally {
-      // Finish loading, regardless of whether there was an error or not
-      postsLoading.value = false;
-    }
-  };
-  
-  // Watch for changes in the route parameters, specifically 'q'
-  watch(() => route.query['q'], (newVal) => {
-    // Set the searchQuery value when the 'q' parameter changes
-    searchQuery.value = newVal || '';
-    performSearch();
-  });
-  
-  // Ensure the search is performed when the component is activated or reactivated
-  onActivated(performSearch);
-  
-  // Perform search on component mount by directly fetching the query from the route
-  onMounted(() => {
-    searchQuery.value = route.query['q'] || '';
-    performSearch();
-  });
-  </script>
-  
+  </div>
+</template>
+
+<script setup>
+import { ref, onMounted, computed, watch } from "vue";
+import { useRoute } from 'vue-router';
+import { SearchBar } from "@/components/input_components";
+import { RouterTabs } from "@/components";
+import { RouterView } from "vue-router";
+
+const route = useRoute();
+const searchQuery = ref();
+
+const computedTabs = computed(() => {
+  return [
+    { to: { name: 'search-posts', query: { q: searchQuery.value } }, title: 'articulos' },
+    { to: { name: 'search-users', query: { q: searchQuery.value } }, title: 'usuarios' },
+    { to: { name: 'search-tags', query: { q: searchQuery.value } }, title: 'tags' }
+  ];
+});
+
+const computedsearchpage = computed(() => {
+  return route.name;
+});
+
+watch(() => route.query['q'], (newVal) => {
+  searchQuery.value = newVal || '';
+});
+
+onMounted(() => {
+  searchQuery.value = route.query['q'] || '';
+});
+
+</script>

@@ -8,7 +8,7 @@
       </Tab>
       <Tab title="Publicados">
         <div class="w-full grid gap-y-4">
-          <SimplePostCard v-for="post in filteredPublishedPosts" :key="post.id" :post="post" />
+          <SimplePostCard v-for="post in filteredPublishedPosts" :key="post.id" :post="post"  />
         </div>
       </Tab>
     </Tabs>

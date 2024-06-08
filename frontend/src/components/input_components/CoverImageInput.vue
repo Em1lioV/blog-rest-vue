@@ -3,7 +3,7 @@
         :class="['w-full rounded-md border-[1px] relative bg-cover-container aspect-[16/6] shadow-black', field.invalid ? 'border-red-500' : 'border-blumine-400']">
         <img v-if="fileUrl" class="w-full h-full object-cover" :src="fileUrl" alt="" />
         <div v-else class="w-full h-full justify-center flex items-center aspect-[16/6]">
-            <img src="../../assets/logo.png" alt="" class="bg-cover w-[25%] min-w-[100px]" />
+            <img src="../../assets/logo.svg" alt="" class="bg-cover w-[25%] min-w-[100px]" />
         </div>
 
         <div class="absolute inset-0 flex flex-col items-end justify-end p-4">

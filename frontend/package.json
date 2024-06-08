@@ -7,8 +7,10 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
+    "@floating-ui/vue": "^1.0.6",
     "@headlessui/vue": "^1.7.16",
     "@heroicons/vue": "^2.0.18",
+    "@tailwindcss/typography": "^0.5.10",
     "@tinymce/tinymce-vue": "^4.0.7",
     "autoprefixer": "^10",
     "axios": "^1.5.1",

@@ -11,8 +11,8 @@ class Role(models.Model):
         return self.description
 
 class Tag(models.Model):
+    slug = AutoSlugField(primary_key=True,populate_from='name', unique=True)
     name = models.CharField(max_length=50, unique=True)
-    slug = AutoSlugField(populate_from='name', unique=True)
 
     def __str__(self):
         return self.name
@@ -107,10 +107,10 @@ class Post(models.Model):
         ('published', 'Published')
     )
     title = models.CharField(max_length=100)
+    subtitle = models.CharField(max_length=140, null=True,blank=True)
     thumbnail = models.ImageField(upload_to=user_directory_path, blank=True, null=True)
-    excerpt = models.CharField(max_length=140, null=True)
     content = models.TextField()
-    content_preview = models.CharField(max_length=220)
+    excerpt = models.CharField(max_length=220)
     slug = AutoSlugField(populate_from='title', unique=True)
     published = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='post_user')

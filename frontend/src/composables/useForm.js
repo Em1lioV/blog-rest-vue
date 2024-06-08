@@ -14,6 +14,10 @@ export default function useForm(fields) {
       
       const formData = serialize(this.fields);
       try {
+        for (var dato of formData.entries()) {
+          console.log(dato[0] + ': ' + dato[1]);
+        }
+     
         await submitter(formData);
       } catch (err) {
         console.log(err);
